@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!--                                                                                   -->
+<!--                  This file is part of the BMWi project 0328006                    -->
+<!--                      Technical Capacities of Gas Networks                         -->
+<!--                                                                                   -->
+<!-- Copyright (C) 2013                                                                -->
+<!-- FAU Erlangen-Nuremberg, HU Berlin, LU Hannover, TU Darmstadt,                     -->
+<!-- University Duisburg-Essen, WIAS Berlin, Zuse Institute Berlin                     -->
+<!-- Contact: Thorsten Koch (koch@zib.de)                                              -->
+<!-- All rights reserved.                                                              -->
+<!--                                                                                   -->
+<!-- This work is licensed under the Creative Commons Attribution 3.0 Unported License.-->
+<!-- To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/ -->
+<!-- or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View,-->
+<!-- California, 94041, USA.                                                           -->
+<!--                                                                                   -->
+<!--                         Please note that you have to cite                         -->
+<!-- Pfetsch et al. (2012) "Validation of Nominations in Gas Network Optimization:     -->
+<!-- Models, Methods, and Solutions", ZIB-Report 12-41                                 -->
+<!--                               if you use this data                                -->
+<!--                                                                                   -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<boundaryValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://gaslib.zib.de/Gas"
+xsi:schemaLocation="http://gaslib.zib.de/Gas
+http://gaslib.zib.de/schema/Scenario.xsd"
+xmlns:framework="http://gaslib.zib.de/Framework">
+<scenario id="nomination_1">
+<node type="entry" id="source_1">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="870.0" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="entry" id="source_2">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="870.0" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="entry" id="source_3">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="348.0" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_1">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="125.04735376044569" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_2">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="34.16991643454039" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_3">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="85.06128133704736" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_4">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="139.58774373259052" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_5">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="48.71030640668524" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_6">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="141.76880222841226" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_7">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="74.88300835654596" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_8">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="6.543175487465181" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_9">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="15.267409470752089" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_10">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="26.172701949860723" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_11">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="63.250696378830085" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_12">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="50.891364902506965" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_13">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="63.977715877437326" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_14">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="101.78272980501393" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_15">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="42.16713091922006" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_16">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="140.3147632311978" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_17">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="28.35376044568245" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_18">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="63.250696378830085" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_19">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="126.50139275766017" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_20">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="63.977715877437326" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_21">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="58.88857938718663" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_22">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="119.958217270195" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_23">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="18.17548746518106" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_24">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="55.98050139275766" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_25">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="52.34540389972145" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_26">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="6.543175487465181" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_27">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="107.59888579387187" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_28">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="83.60724233983287" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+<node type="exit" id="sink_29">
+<pressure value="0" bound="lower" unit="barg"/>
+<pressure value="80" bound="upper" unit="barg"/>
+<flow value="143.22284122562675" bound="both" unit="1000m_cube_per_hour"/>
+</node>
+</scenario>
+</boundaryValue>
