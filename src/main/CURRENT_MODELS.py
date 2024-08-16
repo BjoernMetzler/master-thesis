@@ -46,14 +46,11 @@ class Single_Level_Formulation:
                                             "UB": {arc: (1.0 - self.interdiction[arc]) * self.massflowBounds_at_arcs_dict_dict["UB"][arc] for arc in self.arcs_list}}
 '''
 
-        
-    
     def adjacent_arcs_as_list(self, node: str, in_or_out: str):
         if "in" == in_or_out.lower():
             return [arc for arc in self.arcs_list if arc[1] == node]
         if "out" == in_or_out.lower():
             return [arc for arc in self.arcs_list if arc[0] == node]
-        # TODO: Kann man das so machen? Oder muss hier None/Null hin?
         return []
 
 
