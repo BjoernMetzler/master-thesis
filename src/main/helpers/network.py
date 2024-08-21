@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import logging
 
-from loggerFilter import DuplicateFilter
+from helpers.loggerFilter import DuplicateFilter
 
 from pyomo.environ import SolverFactory, value
 
-from lib.gaslibparse import GasLibParserUnits, Pipe,  \
+from assets.lib.gaslibparse import GasLibParserUnits, Pipe,  \
     CompressorStation, ControlValve, Valve, Resistor, ShortPipe, \
     Entry, Exit, unit
 
@@ -151,7 +151,7 @@ class GasLibNetwork(object):
         # add passive arcs
         for arcData in self.passiveArcs.values():
             tmp_arc = (arcData.from_node, arcData.to_node)
-            if interdiction[str(tmp_arc)] == 1.0:
+            if interdiction[tmp_arc] == 1.0:
                 # mark arc with color red
                 interdicted_network.add_edge(
                     arcData.from_node, arcData.to_node, color = "red")
@@ -163,7 +163,7 @@ class GasLibNetwork(object):
         # add passive arcs
         for arcData in self.passiveArcs.values():
             tmp_arc = (arcData.from_node, arcData.to_node)
-            if interdiction[str(tmp_arc)] == 1.0:
+            if interdiction[tmp_arc] == 1.0:
                 # mark arc with color red
                 interdicted_network.add_edge(
                     arcData.from_node, arcData.to_node, color = "red")
@@ -176,7 +176,7 @@ class GasLibNetwork(object):
         # add active elements to network (later replaced by shortpipes)
         for arcData in self.activeArcs.values():
             tmp_arc = (arcData.from_node, arcData.to_node)
-            if interdiction[str(tmp_arc)] == 1.0:
+            if interdiction[tmp_arc] == 1.0:
                 # mark arc with color red
                 interdicted_network.add_edge(
                     arcData.from_node, arcData.to_node, color = "red")
@@ -207,7 +207,7 @@ class GasLibNetwork(object):
         # add active elements to network (later replaced by shortpipes)
         for arcData in self.activeArcs.values():
             tmp_arc = (arcData.from_node, arcData.to_node)
-            if interdiction[str(tmp_arc)] == 1.0:
+            if interdiction[tmp_arc] == 1.0:
                 # mark arc with color red
                 interdicted_network.add_edge(
                     arcData.from_node, arcData.to_node, color = "red")

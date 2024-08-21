@@ -11,7 +11,7 @@ class Single_Level_Formulation_Model:
         networkInstanceName: str,
         budget: int,
         with_loadflow_non_negative_at_entry_and_exit=True,
-        with_pressureLossFactor_non_negative_at_arcs=True,
+        with_pressureLossFactor_non_negative_at_arcs=False,
         with_mathematical_varnames_instead_of_GRB_model_names=False,
     ):
         self.m = Model(f"{networkInstanceName}")
@@ -145,7 +145,7 @@ class Single_Level_Formulation_Model:
             lb=self.loadshedBounds_at_nodes_dict_dict["LB"],
             ub=self.loadshedBounds_at_nodes_dict_dict["UB"],
             vtype=GRB.CONTINUOUS,
-            name=f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "λ"}',
+            name=f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}',
         )
 
         # Flow variables with bounds for each arc
@@ -163,7 +163,7 @@ class Single_Level_Formulation_Model:
             lb=self.pressureBounds_at_nodes_dict_dict["LB"],
             ub=self.pressureBounds_at_nodes_dict_dict["UB"],
             vtype=GRB.CONTINUOUS,
-            name=f'{"pressure" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "π"}',
+            name=f'{"pressure" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "pi"}',
         )
 
         # Interdiction Variable
@@ -246,55 +246,56 @@ class Single_Level_Formulation_Model:
         # beschränkte Dual-Variablen (zu primalen Ungleichungsnebenbedingungen)
         self.dual_flow_var_at_arcs_lower = self.m.addVars(
             self.arcs_list, lb=0.0, vtype=GRB.CONTINUOUS,             
-            name=f'{"dual_flow_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "δ⁻"}',
+            name=f'{"dual_flow_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "delta_minus"}',
         )
         self.dual_flow_var_at_arcs_upper = self.m.addVars(
             self.arcs_list, lb=0.0, vtype=GRB.CONTINUOUS,             
-            name=f'{"dual_flow_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "δ⁺"}',
+            name=f'{"dual_flow_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "delta_plus"}',
         )
+
 
         self.dual_PDAI_var_at_arcs_lower = self.m.addVars(
             self.arcs_list, lb=0.0, vtype=GRB.CONTINUOUS, 
-            name=f'{"dual_PDAI_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "ε⁻"}',
+            name=f'{"dual_PDAI_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "epsilon_minus"}',
         )
         self.dual_PDAI_var_at_arcs_upper = self.m.addVars(
             self.arcs_list, lb=0.0, vtype=GRB.CONTINUOUS, 
-            name=f'{"dual_PDAI_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "ε⁺"}',
+            name=f'{"dual_PDAI_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "epsilon_plus"}',
         )
 
         self.dual_pressure_var_at_nodes_lower = self.m.addVars(
             self.nodes_list, lb=0.0, vtype=GRB.CONTINUOUS, 
-            name=f'{"dual_pressure_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "ζ⁻"}',
+            name=f'{"dual_pressure_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "zeta_minus"}',
         )
         self.dual_pressure_var_at_nodes_upper = self.m.addVars(
             self.nodes_list, lb=0.0, vtype=GRB.CONTINUOUS, 
-            name=f'{"dual_pressure_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "ζ⁺"}',
+            name=f'{"dual_pressure_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "zeta_plus"}',
         )
 
         self.dual_loadshed_var_at_exit_nodes_lower = self.m.addVars(
             self.exit_nodes_list,
             lb=0.0,
             vtype=GRB.CONTINUOUS,
-            name=f'{"dual_loadshed_exit_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "µ⁻"}',
+            name=f'{"dual_loadshed_exit_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "mu_minus"}',
         )
         self.dual_loadshed_var_at_exit_nodes_upper = self.m.addVars(
             self.exit_nodes_list,
             lb=0.0,
             vtype=GRB.CONTINUOUS,
-            name=f'{"dual_loadshed_exit_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "µ⁺"}',
+            name=f'{"dual_loadshed_exit_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "minus_plus"}',
         )
 
         self.dual_loadshed_var_at_entry_nodes_lower = self.m.addVars(
             self.entry_nodes_list,
             lb=0.0,
             vtype=GRB.CONTINUOUS,
-            name=f'{"dual_loadshed_entry_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "ŋ⁻"}',
+            name=f'{"dual_loadshed_entry_lower" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "eta_minus"}',
         )
         self.dual_loadshed_var_at_entry_nodes_upper = self.m.addVars(
             self.entry_nodes_list,
             lb=0.0,
             vtype=GRB.CONTINUOUS,
-            name=f'{"dual_loadshed_entry_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "ŋ⁺"}',
+            name=f'{"dual_loadshed_entry_upper" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "eta_plus"}',
         )
 
         # unbeschränkte Dual-Variablen (zu primalen Gleichheitsnebenbedingungen)
@@ -303,7 +304,7 @@ class Single_Level_Formulation_Model:
             lb=-float("inf"),
             ub=float("inf"),
             vtype=GRB.CONTINUOUS,
-            name=f'{"dual_flowConservation" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "α"}',
+            name=f'{"dual_flowConservation" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "alpha"}',
         )
 
         # EnNdfC: Entry node dual feasibility constraint
@@ -382,16 +383,10 @@ class Single_Level_Formulation_Model:
         self.m.addSOS(GRB.SOS_TYPE1, [self.dual_PDAI_var_at_arcs_upper[arc], (self.interdiction_var_at_arcs[arc] * (self.pressureBounds_at_nodes_dict_dict["UB"][arc[0]] - self.pressureBounds_at_nodes_dict_dict["LB"][arc[1]])) - (self.pressure_var_at_nodes[arc[0]] - self.pressure_var_at_nodes[arc[1]] - self.pressureLossFactor_at_arcs_dict[arc] * self.flow_var_at_arcs[arc])])"""
         # replaced by
         # Create auxiliary variables
-        aux_vars_lower = {}
-        aux_vars_upper = {}
-        aux_vars_pdai_lower = {}
-        aux_vars_pdai_upper = {}
-
-        for arc in self.arcs_list:
-            aux_vars_lower[arc] = self.m.addVar(name=f"aux_var_lower_{arc}")
-            aux_vars_upper[arc] = self.m.addVar(name=f"aux_var_upper_{arc}")
-            aux_vars_pdai_lower[arc] = self.m.addVar(name=f"aux_var_pdai_lower_{arc}")
-            aux_vars_pdai_upper[arc] = self.m.addVar(name=f"aux_var_pdai_upper_{arc}")
+        aux_vars_lower = self.m.addVars(self.arcs_list,name=f"aux_var_lower")
+        aux_vars_upper = self.m.addVars(self.arcs_list,name=f"aux_var_upper")
+        aux_vars_pdai_lower = self.m.addVars(self.arcs_list,name=f"aux_var_pdai_lower")
+        aux_vars_pdai_upper = self.m.addVars(self.arcs_list,name=f"aux_var_pdai_upper")
 
         # Add constraints to define the auxiliary variables
         for arc in self.arcs_list:
@@ -473,36 +468,33 @@ class Single_Level_Formulation_Model:
     """
         ## Replaced by
         # Create auxiliary variables
-        aux_vars_pressure_lower = {}
-        aux_vars_pressure_upper = {}
-        aux_vars_loadshed_exit_lower = {}
-        aux_vars_loadshed_exit_upper = {}
-        aux_vars_loadshed_entry_lower = {}
-        aux_vars_loadshed_entry_upper = {}
+        aux_vars_pressure_lower = self.m.addVars(
+            self.nodes_list,
+            name=f"aux_var_pressure_lower",
+        )
+        aux_vars_pressure_upper = self.m.addVars(
+            self.nodes_list,
+            name=f"aux_var_pressure_upper",
+        )
+        print(aux_vars_pressure_lower)
+        
+        aux_vars_loadshed_exit_lower = self.m.addVars(
+            self.exit_nodes_list,
+            name=f"aux_var_loadshed_exit_lower",
+        )
+        aux_vars_loadshed_exit_upper = self.m.addVars(
+            self.exit_nodes_list,
+            name=f"aux_var_loadshed_exit_upper",
+        )
 
-        for node in self.nodes_list:
-            aux_vars_pressure_lower[node] = self.m.addVar(
-                name=f"aux_var_pressure_lower_{node}"
-            )
-            aux_vars_pressure_upper[node] = self.m.addVar(
-                name=f"aux_var_pressure_upper_{node}"
-            )
-
-        for node in self.exit_nodes_list:
-            aux_vars_loadshed_exit_lower[node] = self.m.addVar(
-                name=f"aux_var_loadshed_exit_lower_{node}"
-            )
-            aux_vars_loadshed_exit_upper[node] = self.m.addVar(
-                name=f"aux_var_loadshed_exit_upper_{node}"
-            )
-
-        for node in self.entry_nodes_list:
-            aux_vars_loadshed_entry_lower[node] = self.m.addVar(
-                name=f"aux_var_loadshed_entry_lower_{node}"
-            )
-            aux_vars_loadshed_entry_upper[node] = self.m.addVar(
-                name=f"aux_var_loadshed_entry_upper_{node}"
-            )
+        aux_vars_loadshed_entry_lower = self.m.addVars(
+            self.entry_nodes_list,
+            name=f"aux_var_loadshed_entry_lower",
+        )
+        aux_vars_loadshed_entry_upper = self.m.addVars(
+            self.entry_nodes_list,
+            name=f"aux_var_loadshed_entry_upper",
+        )
 
         # Add constraints to define the auxiliary variables
         for node in self.nodes_list:
@@ -1195,12 +1187,11 @@ class Single_Level_Formulation_Model:
         interdiction = {}
         for v in self.m.getVars():
             for n in self.exit_nodes_list:
-                if f"loadshed[{n}]" in v.VarName:
+                if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
                     objVal += v.X * self.loadflow_at_nodes_dict[n]
             for a in self.arcs_list:
-                if f"interdiction[{a[0]},{a[1]}]" in v.VarName:
+                if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
                     interdiction[a] = int(v.X)
-        print(interdiction)
         return {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
         
         
@@ -1214,15 +1205,14 @@ class Single_Level_Formulation_Model:
         self.m.optimize()
         self.m.write("single_level_model_CC.sol")
         self.m.ObjVal
-        self.m.ObjVal
         objVal = 0
         interdiction = {}
         for v in self.m.getVars():
             for n in self.exit_nodes_list:
-                if f"loadshed[{n}]" in v.VarName:
+                if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
                     objVal += v.X * self.loadflow_at_nodes_dict[n]
             for a in self.arcs_list:
-                if f"interdiction[{a[0]},{a[1]}]" in v.VarName:
+                if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
                     interdiction[a] = int(v.X)
         return {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
    
@@ -1240,15 +1230,14 @@ class Single_Level_Formulation_Model:
         self.m.write("single_level_model_BigM.lp")
         self.m.write("single_level_model_BigM.sol")
         self.m.ObjVal
-        self.m.ObjVal
         objVal = 0
         interdiction = {}
         for v in self.m.getVars():
             for n in self.exit_nodes_list:
-                if f"loadshed[{n}]" in v.VarName:
+                if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
                     objVal += v.X * self.loadflow_at_nodes_dict[n]
             for a in self.arcs_list:
-                if f"interdiction[{a[0]},{a[1]}]" in v.VarName:
+                if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
                     interdiction[a] = int(v.X)
         return {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
      

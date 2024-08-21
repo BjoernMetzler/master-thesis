@@ -3,8 +3,8 @@ This is only a simple main to give an example
 how to parse the instance files
 """
 
-from network import GasLibNetwork
-import lib.gaslibparse.helpers
+from helpers.network import GasLibNetwork
+import assets.lib.gaslibparse.helpers
 import sys
 import multiprocessing
 import time
@@ -17,16 +17,16 @@ if networkInstanceName != "testModel4":
     if networkInstanceName != "GasLib-11":
         if len(sys.argv) == 3:
             scenario = sys.argv[2]
-            scn_file = f"./instances/{networkInstanceName}/{networkInstanceName}-{scenario}.scn"
+            scn_file = f"./assets/instances/{networkInstanceName}/{networkInstanceName}-{scenario}.scn"
         else:
-            scn_file = f"./instances/{networkInstanceName}/{networkInstanceName}.scn"
+            scn_file = f"./assets/instances/{networkInstanceName}/{networkInstanceName}.scn"
         
     else:
-        scn_file = f"./instances/{networkInstanceName}/{networkInstanceName}.scn"
+        scn_file = f"./assets/instances/{networkInstanceName}/{networkInstanceName}.scn"
     
 
     # path to .net file
-    net_file = f"./instances/{networkInstanceName}/{networkInstanceName}.net"
+    net_file = f"./assets/instances/{networkInstanceName}/{networkInstanceName}.net"
 
     # now build the network object
     network = GasLibNetwork(net_file, scn_file)
@@ -126,13 +126,13 @@ def run_method(mode, data, networkInstanceName, Budget):
         model = Single_Level_Formulation(data, networkInstanceName, False, Budget)
         result= model.single_level_model_SOS1()
     elif mode == "SL_CC":
-        model = Single_Level_Formulation(data, networkInstanceName, False, Budget)
+        model = Single_Level_Formulation_Model(data, networkInstanceName, False, Budget)
         result= model.single_level_model_CC()
     elif mode == "SL_BigM":
         #run_method("Enum_BigM", data, networkInstanceName, Budget)
-        model = Single_Level_Formulation(data, networkInstanceName, False, Budget)
+        model = Single_Level_Formulation_Model(data, networkInstanceName, False, Budget)
         result= model.single_level_model_BigM()
-    elif mode == "Enum_Primal":
+    """elif mode == "Enum_Primal":
         model = LeaderModel(data, networkInstanceName, Budget, False, False)
         result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
     elif mode == "Enum_CC":
@@ -144,8 +144,9 @@ def run_method(mode, data, networkInstanceName, Budget):
     elif mode == "Enum_BigM":
         model = LeaderModel(data, networkInstanceName, Budget, True, False)
         result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
-    print(result)
-    network.plot_interdiction(result[0])
+    """
+    print(result["interdiction"])
+    network.plot_interdiction(result['interdiction'])
 
 p = multiprocessing.Process(target=run_method, args=(mode, data, networkInstanceName, Budget))
 p.start()

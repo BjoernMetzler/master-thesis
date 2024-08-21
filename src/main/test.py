@@ -2,26 +2,26 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import logging
-from network import GasLibNetwork
-import lib.gaslibparse.helpers
-from loggerFilter import DuplicateFilter
+from helpers.network import GasLibNetwork
+import assets.lib.gaslibparse.helpers
+from helpers.loggerFilter import DuplicateFilter
 
 from pyomo.environ import SolverFactory, value
 
-from lib.gaslibparse import GasLibParserUnits, Pipe,  \
+from assets.lib.gaslibparse import GasLibParserUnits, Pipe,  \
     CompressorStation, ControlValve, Valve, Resistor, ShortPipe, \
     Entry, Exit, unit
 
 # path to .scn file
-scn_file = f"./instances/GasLib-11/GasLib-11.scn"
+scn_file = f"./assets/instances/GasLib-11/GasLib-11.scn"
     
 
 # path to .net file
-net_file = f"./instances/GasLib-11/GasLib-11.net"
+net_file = f"./assets/instances/GasLib-11/GasLib-11.net"
 
 
 
-import networkx as nx
+'''import networkx as nx
 import numpy as np
 
 network_data = {
@@ -118,7 +118,29 @@ class GasLibNetwork:
             'arc4': Arc('entry01', 'exit01')
         }
 
-graph = GasLibNetwork()
+Beispielverwendung
+optimal_interdiction_decision = {
+    "('N01', 'N02')": 1.0,
+    "('N02', 'exit01')": 0.0,
+    "('entry01', 'N01')": 0.0,
+    "('entry01', 'exit01')": 0.0
+}
+'''
+
+
+from model import *
+graph = GasLibNetwork(net_file, scn_file)
+graph._toPyomo(False)
+network_data = graph.pyomoData[None]
+"""model = LeaderModel(network_data, "GasLib-11", 1, False, False)
+result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
+"""
+
+model = Single_Level_Formulation_Model(network_data, "GasLib-11", False, 1, False)
+result= model.single_level_model_SOS1()
+        
+optimal_interdiction_decision=result["interdiction"]
+print(optimal_interdiction_decision)
 
 import matplotlib.pyplot as plt
 
@@ -182,7 +204,7 @@ def plot_solution(graph, sol_path, optimal_interdiction_decision,show_all_attrib
         else:
             tmp_arc_data = solution_data["arcs"][tmp_arc]
             arc_attrs = {'q' if mathematical_var_names else 'flow': f'{tmp_arc_data["massflowLb"]} <= {tmp_arc_data["flow"]} <= {tmp_arc_data["massflowUb"]}'}
-        color = "red" if interdiction.get(str(tmp_arc), 0.0) == 1.0 else "black"
+        color = "red" if interdiction.get(tmp_arc, 0.0) == 1.0 else "black"
         interdicted_network.add_edge(arcData.from_node, arcData.to_node, color=color, **arc_attrs)
 
     pos = {node.node_id: np.array(node.pos) for node in graph.nodes.values()}
@@ -208,12 +230,6 @@ def plot_solution(graph, sol_path, optimal_interdiction_decision,show_all_attrib
 
     plt.show()
 
-# Beispielverwendung
-optimal_interdiction_decision = {
-    "('N01', 'N02')": 1.0,
-    "('N02', 'exit01')": 0.0,
-    "('entry01', 'N01')": 0.0,
-    "('entry01', 'exit01')": 0.0
-}
 
-plot_solution(graph, 'test.sol', optimal_interdiction_decision, False, True)
+
+plot_solution(graph, 'single_level_model_SOS1.sol', optimal_interdiction_decision, False, True)
