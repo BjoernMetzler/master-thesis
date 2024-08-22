@@ -2,6 +2,8 @@ from gurobipy import *
 import sys
 import csv
 import time
+import os
+
 
 
 class Single_Level_Formulation_Model:
@@ -1180,20 +1182,40 @@ class Single_Level_Formulation_Model:
         self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
         self.m.optimize()
-        self.m.write("single_level_model_SOS1.sol")
-        self.m.write("single_level_model_SOS1.lp")
-        self.m.ObjVal
-        objVal = 0
-        interdiction = {}
-        for v in self.m.getVars():
-            for n in self.exit_nodes_list:
-                if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
-                    objVal += v.X * self.loadflow_at_nodes_dict[n]
-            for a in self.arcs_list:
-                if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
-                    interdiction[a] = int(v.X)
-        return {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
         
+        
+        # Define the path where you want to create the folders
+        path_to_SOL = f'./logs/SL_SOS1/SOL/'
+        path_to_LP = f'./logs/SL_SOS1/LP/'
+        
+        # Create the directories if they don't exist
+        os.makedirs(path_to_SOL, exist_ok=True)
+        os.makedirs(path_to_LP, exist_ok=True)
+        
+        # Now you can write to the file
+        if self.m.Status != GRB.INFEASIBLE:
+            self.m.write(os.path.join(path_to_SOL, f'single_level_model_SOS1_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
+            
+            # Get the solutions
+            objVal = 0
+            interdiction = {}
+            for v in self.m.getVars():
+                for n in self.exit_nodes_list:
+                    if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
+                        objVal += v.X * self.loadflow_at_nodes_dict[n]
+                for a in self.arcs_list:
+                    if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
+                        interdiction[a] = int(v.X)
+                        
+            solution = {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
+        
+        else:
+            solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
+        
+        self.m.write(os.path.join(path_to_LP, f'single_level_model_SOS1_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+                
+        return solution
+                
         
     def single_level_model_CC(self):
         self.add_primal_feasibility_constraints()
@@ -1203,18 +1225,39 @@ class Single_Level_Formulation_Model:
         self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
         self.m.optimize()
-        self.m.write("single_level_model_CC.sol")
-        self.m.ObjVal
-        objVal = 0
-        interdiction = {}
-        for v in self.m.getVars():
-            for n in self.exit_nodes_list:
-                if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
-                    objVal += v.X * self.loadflow_at_nodes_dict[n]
-            for a in self.arcs_list:
-                if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
-                    interdiction[a] = int(v.X)
-        return {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
+        
+        
+        # Define the path where you want to create the folders
+        path_to_SOL = f'./logs/SL_CC/SOL/'
+        path_to_LP = f'./logs/SL_CC/LP/'
+        
+        # Create the directories if they don't exist
+        os.makedirs(path_to_SOL, exist_ok=True)
+        os.makedirs(path_to_LP, exist_ok=True)
+        
+        # Now you can write to the file
+        if self.m.Status != GRB.INFEASIBLE:
+            self.m.write(os.path.join(path_to_SOL, f'single_level_model_CC_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
+            
+            # Get the solutions
+            objVal = 0
+            interdiction = {}
+            for v in self.m.getVars():
+                for n in self.exit_nodes_list:
+                    if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
+                        objVal += v.X * self.loadflow_at_nodes_dict[n]
+                for a in self.arcs_list:
+                    if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
+                        interdiction[a] = int(v.X)
+                        
+            solution = {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
+        
+        else:
+            solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
+        
+        self.m.write(os.path.join(path_to_LP, f'single_level_model_CC_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+                
+        return solution
    
         
     def single_level_model_BigM(self):
@@ -1225,19 +1268,127 @@ class Single_Level_Formulation_Model:
         self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
         self.m.optimize()
-        #self.test_feasibility_for_given_solution("bigmmodel_mode_False.sol")
-        self.m.optimize()
-        self.m.write("single_level_model_BigM.lp")
-        self.m.write("single_level_model_BigM.sol")
-        self.m.ObjVal
-        objVal = 0
-        interdiction = {}
-        for v in self.m.getVars():
-            for n in self.exit_nodes_list:
-                if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
-                    objVal += v.X * self.loadflow_at_nodes_dict[n]
-            for a in self.arcs_list:
-                if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
-                    interdiction[a] = int(v.X)
-        return {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
-     
+        
+        # Define the path where you want to create the folders
+        path_to_SOL = f'./logs/SL_BigM/SOL/'
+        path_to_LP = f'./logs/SL_BigM/LP/'
+        
+        # Create the directories if they don't exist
+        os.makedirs(path_to_SOL, exist_ok=True)
+        os.makedirs(path_to_LP, exist_ok=True)
+        
+        # Now you can write to the file
+        if self.m.Status != GRB.INFEASIBLE:
+            self.m.write(os.path.join(path_to_SOL, f'single_level_model_BigM_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
+            
+            # Get the solutions
+            objVal = 0
+            interdiction = {}
+            for v in self.m.getVars():
+                for n in self.exit_nodes_list:
+                    if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
+                        objVal += v.X * self.loadflow_at_nodes_dict[n]
+                for a in self.arcs_list:
+                    if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
+                        interdiction[a] = int(v.X)
+                        
+            solution = {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
+        
+        else:
+            solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
+        
+        self.m.write(os.path.join(path_to_LP, f'single_level_model_BigM_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+                
+        return solution
+    
+
+    def enum_approach(self):
+        import json
+        import re
+
+        def generate_combinations(length, max_sum):
+            if length == 0:
+                yield []
+            elif length == 1:
+                for i in range(min(2, max_sum + 1)):
+                    yield [i]
+            else:
+                for i in range(min(2, max_sum + 1)):
+                    for rest in generate_combinations(length - 1, max_sum - i):
+                        yield [i] + rest
+
+        interdictionDecisions_list = generate_combinations(len(self.arcs_list), self.interdictionBudget_int)
+        i=0
+        
+        # We are working with the Primal Constraints only to solve the problem on the Follower Level in each instant
+        # Afterwards we look up the interdiction decision with the highest objective value that is still feasible
+        self.add_primal_feasibility_constraints()
+        self.add_WCcheck_constraints()
+        self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
+        self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list), GRB.MINIMIZE)
+        
+            
+        all_feasible_interdiction_decisions_with_ObjVal = []
+        for decision in interdictionDecisions_list:
+            dict_arc_to_interdiction = dict(zip(self.arcs_list, decision))            
+
+            # Remove previous interdiction fixation constraints
+            if hasattr(self, 'interdiction_fixation_constraints'):
+                self.m.remove(self.interdiction_fixation_constraints)
+                
+            # Add Interdiction fixation
+            self.interdiction_fixation_constraints = self.m.addConstrs(
+                (self.interdiction_var_at_arcs[arc] == dict_arc_to_interdiction[arc] for arc in self.arcs_list),
+                name="interdiction_fixation"
+            )
+            
+            # Optimize the model
+            self.m.optimize()
+            
+            # Define the path where you want to create the folders
+            path_to_SOL = f'./logs/Enum_Primal/SOL/bi_level_model_Enum_Primal_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
+            path_to_LP = f'./logs/Enum_Primal/LP/bi_level_model_Enum_Primal_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
+            
+            # Create the directories if they don't exist
+            os.makedirs(path_to_SOL, exist_ok=True)
+            os.makedirs(path_to_LP, exist_ok=True)
+            
+            # Now you can write to the file
+            if self.m.Status != GRB.INFEASIBLE:
+                self.m.write(os.path.join(path_to_SOL, f'{i}.sol'))
+                 # Get the solutions
+                objVal = 0
+                interdiction = {}
+                for v in self.m.getVars():
+                    for n in self.exit_nodes_list:
+                        if f'{"loadshed" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "lambda"}[{n}]' in v.VarName:
+                            objVal += v.X * self.loadflow_at_nodes_dict[n]
+                    for a in self.arcs_list:
+                        if f'{"interdiction" if not self.with_mathematical_varnames_instead_of_GRB_model_names else "x"}[{a[0]},{a[1]}]' in v.VarName:
+                            interdiction[a] = int(v.X)
+                            
+                solution = {"interdiction": interdiction, "objVal": objVal, "Runtime": self.m.Runtime}
+            
+            else:
+                solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
+            
+            self.m.write(os.path.join(path_to_LP, f'{i}.lp'))
+            i+=1
+            
+            all_feasible_interdiction_decisions_with_ObjVal.append(solution)
+        
+        # Sorting done by both objVal and overall lowest number of interdictions
+        sorted_list_of_dicts = sorted(
+            filter(lambda x: not (x is None or isinstance(x["objVal"], str)), all_feasible_interdiction_decisions_with_ObjVal),
+            key=lambda x: (x['objVal'], -sum(x['interdiction'].values())),
+            reverse=True
+        )
+        
+        if sorted_list_of_dicts:
+            return sorted_list_of_dicts[0]
+        else:
+            return {
+                'interdiction': None,
+                'objVal': GRB.INFEASIBLE,
+                'Runtime': 0.0
+            }

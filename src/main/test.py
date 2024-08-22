@@ -129,6 +129,7 @@ optimal_interdiction_decision = {
 
 
 from model import *
+
 graph = GasLibNetwork(net_file, scn_file)
 graph._toPyomo(False)
 network_data = graph.pyomoData[None]
@@ -136,8 +137,9 @@ network_data = graph.pyomoData[None]
 result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
 """
 
-model = Single_Level_Formulation_Model(network_data, "GasLib-11", False, 1, False)
-result= model.single_level_model_SOS1()
+model = Single_Level_Formulation_Model(data=network_data, networkInstanceName="GasLib-11", with_loadflow_non_negative_at_entry_and_exit=True, budget=1)
+#model = Single_Level_Formulation(data=network_data,networkInstanceName="GasLib-11",budget=1,with_loadflow_non_negative=True)
+result = model.enum_approach()
         
 optimal_interdiction_decision=result["interdiction"]
 print(optimal_interdiction_decision)

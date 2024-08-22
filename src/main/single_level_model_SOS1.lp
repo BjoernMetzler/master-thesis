@@ -64,8 +64,8 @@ Subject To
    - flow[N04,N05] = 0
  flow_conservation[entry01]: 34.88888888888889 loadshed[entry01]
    + flow[entry01,entry03] = 34.88888888888889
- flow_conservation[entry03]: - flow[entry01,entry03] + flow[entry03,N01]
-   = 0
+ flow_conservation[entry03]: 1e-05 loadshed[entry03]
+   - flow[entry01,entry03] + flow[entry03,N01] = 1e-05
  flow_conservation[entry02]: 30.52777777777778 loadshed[entry02]
    + flow[entry02,N03] = 30.52777777777778
  flow_conservation[exit01]: - 21.80555555555556 loadshed[exit01]
@@ -122,7 +122,8 @@ Subject To
    + dual_loadshed_entry_upper[entry01]
    - 34.88888888888889 dual_flowConservation[entry01] = 0
  EnNdfC[entry03]: - dual_loadshed_entry_lower[entry03]
-   + dual_loadshed_entry_upper[entry03] = 0
+   + dual_loadshed_entry_upper[entry03]
+   - 1e-05 dual_flowConservation[entry03] = 0
  EnNdfC[entry02]: - dual_loadshed_entry_lower[entry02]
    + dual_loadshed_entry_upper[entry02]
    - 30.52777777777778 dual_flowConservation[entry02] = 0

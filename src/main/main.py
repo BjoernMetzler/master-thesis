@@ -111,7 +111,7 @@ else:
     }
 
 
-from CURRENT_MODELS import *
+from model import *
 
 if (len(sys.argv) >= 4):
     Budget = int(sys.argv[3])
@@ -122,17 +122,19 @@ if (len(sys.argv) >= 3):
 
 
 def run_method(mode, data, networkInstanceName, Budget):
+    model = Single_Level_Formulation_Model(data,networkInstanceName,Budget,False)
+    
     if mode == "SL_SOS1":
-        model = Single_Level_Formulation(data, networkInstanceName, False, Budget)
         result= model.single_level_model_SOS1()
     elif mode == "SL_CC":
-        model = Single_Level_Formulation_Model(data, networkInstanceName, False, Budget)
         result= model.single_level_model_CC()
     elif mode == "SL_BigM":
-        #run_method("Enum_BigM", data, networkInstanceName, Budget)
-        model = Single_Level_Formulation_Model(data, networkInstanceName, False, Budget)
         result= model.single_level_model_BigM()
-    """elif mode == "Enum_Primal":
+    elif mode == "Enum_Approach":
+        result = model.enum_approach()
+        
+    # Old model (CURRENT_MODELS.py)
+    '''elif mode == "Enum_Primal":
         model = LeaderModel(data, networkInstanceName, Budget, False, False)
         result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
     elif mode == "Enum_CC":
@@ -144,8 +146,9 @@ def run_method(mode, data, networkInstanceName, Budget):
     elif mode == "Enum_BigM":
         model = LeaderModel(data, networkInstanceName, Budget, True, False)
         result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
-    """
-    print(result["interdiction"])
+    '''  
+    
+    print(result)
     network.plot_interdiction(result['interdiction'])
 
 p = multiprocessing.Process(target=run_method, args=(mode, data, networkInstanceName, Budget))

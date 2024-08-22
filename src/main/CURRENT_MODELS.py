@@ -1119,6 +1119,7 @@ class LeaderModel:
         for decision in interdictionDecisions_list:
             list_of_notWeakly_connected_interdictions = []
             interdiction_decision = dict(zip(self.data["arcs"][None], decision))
+            
             tempModel = FollowerModel_WithInterdictionInput(data=self.data, interdictionDecision=interdiction_decision, networkInstanceName=self.networkInstanceName,with_loadflow_non_negative=True)
             
             isAlreadyNotFeasible=False
