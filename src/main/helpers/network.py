@@ -26,7 +26,7 @@ class GasLibNetwork(object):
     of 283 K.
     Methane constant are chosen according to thermopedia.com
     """
-
+    #TODO: Modify so that GasLibNetwork can be constructed from pyomoData
     def __init__(self, net_file, scn_file, interdictionBudget=0):
         # Methane R_s in J/(kg K)
         self.specificGasConstant = np.float64(
@@ -42,6 +42,7 @@ class GasLibNetwork(object):
 
         # maximum number of arcs that can be interdicted
         self.interdictionBudget = interdictionBudget
+
 
         parser = GasLibParserUnits(net_file, scn_file)
         parser.parse()
@@ -100,7 +101,7 @@ class GasLibNetwork(object):
         self._populate()
 
         # # # plot graph
-        self.plot()
+        #self.plot()
         
 
     def _populate(self) -> None:

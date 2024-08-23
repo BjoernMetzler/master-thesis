@@ -478,7 +478,6 @@ class Single_Level_Formulation_Model:
             self.nodes_list,
             name=f"aux_var_pressure_upper",
         )
-        print(aux_vars_pressure_lower)
         
         aux_vars_loadshed_exit_lower = self.m.addVars(
             self.exit_nodes_list,
@@ -1194,7 +1193,7 @@ class Single_Level_Formulation_Model:
         
         # Now you can write to the file
         if self.m.Status != GRB.INFEASIBLE:
-            self.m.write(os.path.join(path_to_SOL, f'single_level_model_SOS1_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
+            self.m.write(os.path.join(path_to_SOL, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
             
             # Get the solutions
             objVal = 0
@@ -1212,7 +1211,7 @@ class Single_Level_Formulation_Model:
         else:
             solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
         
-        self.m.write(os.path.join(path_to_LP, f'single_level_model_SOS1_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+        self.m.write(os.path.join(path_to_LP, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
                 
         return solution
                 
@@ -1237,7 +1236,7 @@ class Single_Level_Formulation_Model:
         
         # Now you can write to the file
         if self.m.Status != GRB.INFEASIBLE:
-            self.m.write(os.path.join(path_to_SOL, f'single_level_model_CC_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
+            self.m.write(os.path.join(path_to_SOL, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
             
             # Get the solutions
             objVal = 0
@@ -1255,7 +1254,7 @@ class Single_Level_Formulation_Model:
         else:
             solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
         
-        self.m.write(os.path.join(path_to_LP, f'single_level_model_CC_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+        self.m.write(os.path.join(path_to_LP, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
                 
         return solution
    
@@ -1279,7 +1278,7 @@ class Single_Level_Formulation_Model:
         
         # Now you can write to the file
         if self.m.Status != GRB.INFEASIBLE:
-            self.m.write(os.path.join(path_to_SOL, f'single_level_model_BigM_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
+            self.m.write(os.path.join(path_to_SOL, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.sol'))
             
             # Get the solutions
             objVal = 0
@@ -1297,7 +1296,7 @@ class Single_Level_Formulation_Model:
         else:
             solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
         
-        self.m.write(os.path.join(path_to_LP, f'single_level_model_BigM_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+        self.m.write(os.path.join(path_to_LP, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
                 
         return solution
     
@@ -1346,8 +1345,8 @@ class Single_Level_Formulation_Model:
             self.m.optimize()
             
             # Define the path where you want to create the folders
-            path_to_SOL = f'./logs/Enum_Primal/SOL/bi_level_model_Enum_Primal_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
-            path_to_LP = f'./logs/Enum_Primal/LP/bi_level_model_Enum_Primal_intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
+            path_to_SOL = f'./logs/Enum_Approach/SOL/intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
+            path_to_LP = f'./logs/Enum_Approach/LP/intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
             
             # Create the directories if they don't exist
             os.makedirs(path_to_SOL, exist_ok=True)
