@@ -51,13 +51,37 @@ else:
     import matplotlib.pyplot as plt
     
     #TODO: Work on visualization for this case 
+    class Node:
+        def __init__(self, node_id, pos):
+            self.node_id = node_id
+            self.pos = pos
+
+    class Arc:
+        def __init__(self, from_node, to_node):
+            self.from_node = from_node
+            self.to_node = to_node
+
     class GasLibNetwork:
+        def __init__(self):
+            self.nodes = {
+                'N01': Node('N01', [0, 0]),
+                'N02': Node('N02', [1, 0]),
+                'entry01': Node('entry01', [0, 1]),
+                'exit01': Node('exit01', [1, 1])
+            }
+            self.arcs = {
+                'arc1': Arc('N01', 'N02'),
+                'arc2': Arc('N02', 'exit01'),
+                'arc3': Arc('entry01', 'N01'),
+                'arc4': Arc('entry01', 'exit01')
+            }
+    '''class GasLibNetwork:
         def __init__(self, network_data):
             self.network = nx.MultiDiGraph(name=network_data.get('networkInstanceName', 'GasLibNetwork'))
             self.network_data = network_data
             self.create_nodes()
             self.create_arcs()
-            self.add_attributes()
+            #self.add_attributes()
             self.set_positions()
 
         def create_nodes(self):
@@ -92,12 +116,14 @@ else:
         @property
         def arcs(self):
             return {(u, v): self.network[u][v] for u, v in self.network.edges}
+        '''
         
-    network=GasLibNetwork(pyomoData)
+    network=GasLibNetwork()
+    '''
     print(network.arcs)
     print(network.nodes)
     # Now pyomoData contains the data from the file
-    print(pyomoData)
+    print(pyomoData)'''
     
 # display data for the model
 '''displayModes = ["cmi","teXt","json"]
@@ -132,7 +158,7 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
         result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
     '''  
     
-    optimal_interdiction_decision=result["interdiction"]
+    optimal_interdiction_decision = result["interdiction"]
     def read_solution_file(sol_path):
         solution = {"nodes": {}, "arcs": {}}
         
@@ -223,10 +249,10 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
 
         plt.show()
 
-    # Example usage
-    plot_solution(network, f'./logs/{mode}/SOL/intBudget_{Budget}_instance_{networkInstanceName}.sol', optimal_interdiction_decision, False, True)
 
-    return 
+    plot_solution(network, f'./logs/{mode}/SOL/intBudget_{Budget}_instance_{networkInstanceName}.sol', optimal_interdiction_decision, False, True)
+    
+    #print(result)
 
 
 p = multiprocessing.Process(target=run_method, args=(mode, pyomoData, networkInstanceName, Budget))

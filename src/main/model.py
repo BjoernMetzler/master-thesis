@@ -3,6 +3,7 @@ import sys
 import csv
 import time
 import os
+import logging
 
 
 
@@ -20,8 +21,9 @@ class Single_Level_Formulation_Model:
 
         # General Model Parameters
         self.m.setParam("TimeLimit", 3600)  # Set a time limit for the optimization
-        self.m.setParam("OutputFlag", 0)  # Suppress Gurobi output
-
+        self.m.setParam("OutputFlag", 1)  # Suppress Gurobi output
+        self.m.setParam("LogToConsole", 1)
+        
         # Data conversion into Model
         self.nodes_list = data["nodes"][None]  # List of nodes
         self.arcs_list = data["arcs"][None]  # List of arcs
@@ -1172,7 +1174,7 @@ class Single_Level_Formulation_Model:
             # Adding the constraint
             self.m.addConstr(variable == value, name=f"comp_constr_{var_name}_{node}")
             
-        
+            
     def single_level_model_SOS1(self):
         self.add_primal_feasibility_constraints()
         self.add_dual_feasibility_constraints()
@@ -1180,8 +1182,14 @@ class Single_Level_Formulation_Model:
         self.add_WCcheck_constraints()
         self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
-        self.m.optimize()
+    
+        # Define the path where the actual Gurobi-Log-Files are going 
+        path_to_LOG = f'./logs/SL_SOS1/LOG/'
+        os.makedirs(path_to_LOG, exist_ok=True)
+        log_file_path = open(os.path.join(path_to_LOG, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.log'),'w')
+        sys.stdout = log_file_path
         
+        self.m.optimize()
         
         # Define the path where you want to create the folders
         path_to_SOL = f'./logs/SL_SOS1/SOL/'
@@ -1212,6 +1220,9 @@ class Single_Level_Formulation_Model:
             solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
         
         self.m.write(os.path.join(path_to_LP, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+        
+        log_file_path.close()
+        sys.stdout = sys.__stdout__
                 
         return solution
                 
@@ -1223,8 +1234,14 @@ class Single_Level_Formulation_Model:
         self.add_WCcheck_constraints()
         self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
-        self.m.optimize()
         
+        # Define the path where the actual Gurobi-Log-Files are going 
+        path_to_LOG = f'./logs/SL_CC/LOG/'
+        os.makedirs(path_to_LOG, exist_ok=True)
+        log_file_path = open(os.path.join(path_to_LOG, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.log'),'w')
+        sys.stdout = log_file_path
+        
+        self.m.optimize()
         
         # Define the path where you want to create the folders
         path_to_SOL = f'./logs/SL_CC/SOL/'
@@ -1255,6 +1272,9 @@ class Single_Level_Formulation_Model:
             solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
         
         self.m.write(os.path.join(path_to_LP, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
+        
+        log_file_path.close()   
+        sys.stdout = sys.__stdout__
                 
         return solution
    
@@ -1266,6 +1286,13 @@ class Single_Level_Formulation_Model:
         self.add_WCcheck_constraints()
         self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
+        
+        # Define the path where the actual Gurobi-Log-Files are going 
+        path_to_LOG = f'./logs/SL_BigM/LOG/'
+        os.makedirs(path_to_LOG, exist_ok=True)
+        log_file_path = open(os.path.join(path_to_LOG, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.log'),'w')
+        sys.stdout = log_file_path
+        
         self.m.optimize()
         
         # Define the path where you want to create the folders
@@ -1297,7 +1324,10 @@ class Single_Level_Formulation_Model:
             solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
         
         self.m.write(os.path.join(path_to_LP, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.lp'))
-                
+               
+        log_file_path.close()        
+        sys.stdout = sys.__stdout__
+        
         return solution
     
 
@@ -1341,20 +1371,26 @@ class Single_Level_Formulation_Model:
                 name="interdiction_fixation"
             )
             
+            # Define the path where the actual Gurobi-Log-Files are going 
+            self.path_to_LOG = f'./logs/Enum_Approach/LOG/intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
+            os.makedirs(self.path_to_LOG, exist_ok=True)
+            log_file_path = open(os.path.join(self.path_to_LOG, f'{i}.log'),'w')
+            sys.stdout = log_file_path          
+
             # Optimize the model
             self.m.optimize()
             
-            # Define the path where you want to create the folders
-            path_to_SOL = f'./logs/Enum_Approach/SOL/intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
-            path_to_LP = f'./logs/Enum_Approach/LP/intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
+            # Define the path where you want to create the folders to store the log-files
+            self.path_to_SOL = f'./logs/Enum_Approach/SOL/intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
+            self.path_to_LP = f'./logs/Enum_Approach/LP/intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}/'
             
             # Create the directories if they don't exist
-            os.makedirs(path_to_SOL, exist_ok=True)
-            os.makedirs(path_to_LP, exist_ok=True)
+            os.makedirs(self.path_to_SOL, exist_ok=True)
+            os.makedirs(self.path_to_LP, exist_ok=True)
             
             # Now you can write to the file
             if self.m.Status != GRB.INFEASIBLE:
-                self.m.write(os.path.join(path_to_SOL, f'{i}.sol'))
+                self.m.write(os.path.join(self.path_to_SOL, f'{i}.sol'))
                  # Get the solutions
                 objVal = 0
                 interdiction = {}
@@ -1371,7 +1407,10 @@ class Single_Level_Formulation_Model:
             else:
                 solution = {"interdiction": interdiction, "objVal": -1.0, "Runtime": self.m.Runtime}
             
-            self.m.write(os.path.join(path_to_LP, f'{i}.lp'))
+            self.m.write(os.path.join(self.path_to_LP, f'{i}.lp'))
+            log_file_path.close()
+            sys.stdout = sys.__stdout__
+            
             i+=1
             
             all_feasible_interdiction_decisions_with_ObjVal.append(solution)
@@ -1383,7 +1422,40 @@ class Single_Level_Formulation_Model:
             reverse=True
         )
         
+        def filter_solution_files(folder_path, interdiction_decision):
+            # List to store filenames that meet the criteria
+            matching_files = []
+
+            # Iterate through all files in the given folder
+            for filename in os.listdir(folder_path):
+                if filename.endswith('.sol'):  # Assuming the solution files have a .txt extension
+                    file_path = os.path.join(folder_path, filename)
+                    interdiction_dict = {}
+                    
+                    # Open and read the file
+                    with open(file_path, 'r') as file:
+                        for line in file:
+                            if line.startswith('interdiction'):
+                                parts = line.split()
+                                incident_nodes_list = parts[0].split('[')[1].strip(']').split(',')
+                                key = (incident_nodes_list[0],incident_nodes_list[1])
+                                value = float(parts[1])
+                                interdiction_dict[key] = value
+                    
+                    # Check if the specific interdiction decision is in the dictionary
+                    if interdiction_decision == interdiction_dict:
+                        matching_files.append(filename)
+            
+            return matching_files
+        
+        
         if sorted_list_of_dicts:
+            sol_file = filter_solution_files(self.path_to_SOL, sorted_list_of_dicts[0]['interdiction'])[0].rstrip('.sol')
+            for (path, suffix) in [(self.path_to_SOL,'.sol'), (self.path_to_LP,'.lp'), (self.path_to_LOG,'.log')]:
+                source = os.path.join(path, sol_file + suffix)
+                destination = os.path.join(os.path.dirname(path.rstrip('/')), os.path.basename(path.rstrip('/')) + suffix)
+                os.system(f'cp {source} {destination}')
+            
             return sorted_list_of_dicts[0]
         else:
             return {
