@@ -2,13 +2,14 @@
 This is only a simple main to give an example
 how to parse the instance files
 """
-
 import helpers.network
 import sys
 import multiprocessing
 import ast
 import networkx as nx
 import matplotlib.pyplot as plt
+import plotly.tools as tls
+import plotly.io as pio
 import numpy as np
 from model import *
 
@@ -201,6 +202,7 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
         interdicted_network = nx.MultiDiGraph()
         interdiction = optimal_interdiction_decision
         
+        #plt.switch_backend('Qt5Agg')
         # Add nodes with attributes
         for nodeId, nodeData in graph.nodes.items():
             if show_all_attributes:
@@ -247,6 +249,9 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
         }
         nx.draw_networkx_edge_labels(interdicted_network, pos, edge_labels=edge_labels, font_size=8)
 
+        #TODO: Insert different folders to insert the plots into
+        plt.savefig("./myfile.pdf", format='pdf')
+        
         plt.show()
 
 
