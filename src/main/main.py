@@ -21,14 +21,15 @@ if (len(sys.argv) >= 4):
 if (len(sys.argv) >= 3):
     mode = sys.argv[2]
     
-networkInstanceName = sys.argv[1]
+networkInstanceName = sys.argv[1].split(",")
+scenarioname= f'{networkInstanceName[0]}-{networkInstanceName[1]}'
 
 if "testModel4" not in networkInstanceName:
     # path to .scn file
-    scn_file = f"./assets/instances/{networkInstanceName}/{networkInstanceName}.scn"
+    scn_file = f"./assets/instances/{networkInstanceName[0]}/{scenarioname}.scn"
     
     # path to .net file
-    net_file = f"./assets/instances/{networkInstanceName}/{networkInstanceName}.net"
+    net_file = f"./assets/instances/{networkInstanceName[0]}/{networkInstanceName[0]}.net"
 
     # now build the network object
     network = helpers.network.GasLibNetwork(net_file, scn_file)
@@ -255,12 +256,12 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
         plt.show()
 
 
-    plot_solution(network, f'./logs/{mode}/SOL/intBudget_{Budget}_instance_{networkInstanceName}.sol', optimal_interdiction_decision, False, True)
+    #plot_solution(network, f'./logs/{mode}/SOL/intBudget_{Budget}_instance_{scenarioname}.sol', optimal_interdiction_decision, False, True)
     
-    #print(result)
+    print(result)
 
 
-p = multiprocessing.Process(target=run_method, args=(mode, pyomoData, networkInstanceName, Budget))
+p = multiprocessing.Process(target=run_method, args=(mode, pyomoData, scenarioname, Budget))
 p.start()
 
 # Wait for 3600 seconds (1 hour)
