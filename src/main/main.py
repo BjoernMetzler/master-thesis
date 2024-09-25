@@ -256,7 +256,7 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
         plt.show()
 
 
-    #plot_solution(network, f'./logs/{mode}/SOL/intBudget_{Budget}_instance_{scenarioname}.sol', optimal_interdiction_decision, False, True)
+    plot_solution(network, f'./logs/{mode}/SOL/intBudget_{Budget}_instance_{scenarioname}.sol', optimal_interdiction_decision, False, True)
     
     print(result)
 

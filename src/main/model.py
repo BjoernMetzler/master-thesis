@@ -27,6 +27,10 @@ class Single_Level_Formulation_Model:
         # Data conversion into Model
         self.nodes_list = data["nodes"][None]  # List of nodes
         self.arcs_list = data["arcs"][None]  # List of arcs
+
+        # Filter for duplicate arcs (erase duplicate arcs)
+        self.arcs_list = list(set(data["arcs"][None]))
+        
         self.interdictionBudget_int = budget  # Budget for interdiction
         self.activeElements_list = data["activeElements"][
             None

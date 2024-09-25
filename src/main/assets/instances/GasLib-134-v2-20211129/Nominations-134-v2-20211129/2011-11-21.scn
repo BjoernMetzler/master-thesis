@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!--                                                                                   -->
+<!--                  This file is part of the BMWi project 0328006                    -->
+<!--                      Technical Capacities of Gas Networks                         -->
+<!--                                                                                   -->
+<!-- Copyright (C) 2013                                                                -->
+<!-- FAU Erlangen-Nuremberg, HU Berlin, LU Hannover, TU Darmstadt,                     -->
+<!-- University Duisburg-Essen, WIAS Berlin, Zuse Institute Berlin                     -->
+<!-- Contact: Thorsten Koch (koch@zib.de)                                              -->
+<!-- All rights reserved.                                                              -->
+<!--                                                                                   -->
+<!-- This work is licensed under the Creative Commons Attribution 3.0 Unported License.-->
+<!-- To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/ -->
+<!-- or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View,-->
+<!-- California, 94041, USA.                                                           -->
+<!--                                                                                   -->
+<!--                         Please note that you have to cite                         -->
+<!-- Pfetsch et al. (2012) "Validation of Nominations in Gas Network Optimization:     -->
+<!-- Models, Methods, and Solutions", ZIB-Report 12-41                                 -->
+<!--                               if you use this data                                -->
+<!--                                                                                   -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<boundaryValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="http://gaslib.zib.de/Gas"
+               xsi:schemaLocation="http://gaslib.zib.de/Gas http://gaslib.zib.de/schema/Scenario.xsd"
+               xmlns:framework="http://gaslib.zib.de/Framework">
+  <scenario id="scenario_21">
+    <node id="node_ld17" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="5.9107475"/>
+    </node>
+    <node id="node_ld22" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="12.24369125"/>
+    </node>
+    <node id="node_ld2" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="22.4175"/>
+    </node>
+    <node id="node_ld23" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.8458870676582061"/>
+    </node>
+    <node id="node_ld16" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.802172875"/>
+    </node>
+    <node id="node_ld37" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="10.31205"/>
+    </node>
+    <node id="node_ld43" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld25" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld41" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="1.4347199999999998"/>
+    </node>
+    <node id="node_ld31" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="33.62625"/>
+    </node>
+    <node id="node_ld14" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="1.4672111603767553"/>
+    </node>
+    <node id="node_ld36" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="48.122899999999994"/>
+    </node>
+    <node id="node_ld15" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="1.085671309074197"/>
+    </node>
+    <node id="node_ld18" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="5.9107475"/>
+    </node>
+    <node id="node_ld8" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="3.79976625"/>
+    </node>
+    <node id="node_ld12" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="56.69385750000001"/>
+    </node>
+    <node id="node_ld45" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld10" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="10.55490625"/>
+    </node>
+    <node id="node_ld44" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld7" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="1.94210275"/>
+    </node>
+    <node id="node_ld13" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="31.66471875"/>
+    </node>
+    <node id="node_ld30" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="11.6571"/>
+    </node>
+    <node id="node_ld42" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="67.2525"/>
+    </node>
+    <node id="node_ld5" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.010554906250000001"/>
+    </node>
+    <node id="node_ld28" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld32" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="28.021874999999998"/>
+    </node>
+    <node id="node_ld3" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.7875900237240616"/>
+    </node>
+    <node id="node_ld20" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.44330606250000004"/>
+    </node>
+    <node id="node_ld11" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="8.9505605"/>
+    </node>
+    <node id="node_ld33" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="5.018194912261052"/>
+    </node>
+    <node id="node_ld38" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="1.210545"/>
+    </node>
+    <node id="node_ld39" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.6501075"/>
+    </node>
+    <node id="node_ld9" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="4.64415875"/>
+    </node>
+    <node id="node_ld1" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld27" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="62.335595000000005"/>
+    </node>
+    <node id="node_ld24" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="46.703125"/>
+    </node>
+    <node id="node_ld21" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="2.374305798375"/>
+    </node>
+    <node id="node_ld34" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld40" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="10.31205"/>
+    </node>
+    <node id="node_ld35" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="14.22764"/>
+    </node>
+    <node id="node_ld26" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.0"/>
+    </node>
+    <node id="node_ld6" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="18.027779875000004"/>
+    </node>
+    <node id="node_ld29" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="65.38437499999999"/>
+    </node>
+    <node id="node_ld19" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="1.0496338945073178"/>
+    </node>
+    <node id="node_ld4" type="exit">
+      <flow bound="both" unit="1000m_cube_per_hour" value="0.6494765408131445"/>
+    </node>
+    <node id="node_1" type="entry">
+      <flow bound="both" unit="1000m_cube_per_hour" value="94.15350000000001"/>
+    </node>
+    <node id="node_20" type="entry">
+      <flow bound="both" unit="1000m_cube_per_hour" value="403.5131239255398"/>
+    </node>
+    <node id="node_80" type="entry">
+      <flow bound="both" unit="1000m_cube_per_hour" value="100.87875000000001"/>
+    </node>
+  </scenario>
+</boundaryValue>

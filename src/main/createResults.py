@@ -3,9 +3,10 @@ import os
 import subprocess
 
 # Definieren Sie die möglichen Werte für jeden Parameter
-gas_network_instances = ["GasLib-40"] #"testModel4","GasLib-11",
+gas_network_instances = ["GasLib-11"] #"testModel4","GasLib-11",
 modes = {"SL": [], "Enum": ["Enum_Approach"]} #"Enum_CC", "SL_CC""SL_SOS1","SL_BigM""Enum_Primal",
-scenarios = ["homogen-northEast-randomExits", "homogen-northEast", "homogen-randomExits", "south-randomExits", "homogen-south", "homogen", "northEast-randomExits", "northEast", "randomExits", "randomExits0-200", "scaled-randomExits", "scaled", "south-randomExits", "south",""]
+scenarios = {"GasLib-11": [f'lfset{i+1}' for i in range(20)] + ['standard'],
+    "GasLib-40": ["standard","homogen-northEast-randomExits", "homogen-northEast", "homogen-randomExits", "south-randomExits", "homogen-south", "homogen", "northEast-randomExits", "northEast", "randomExits", "randomExits0-200", "scaled-randomExits", "scaled", "south-randomExits", "south"]}
 results = {}
 Budget = 3
 
@@ -25,7 +26,7 @@ with open("analysis.csv", 'a', newline='') as file:
     
     for mode in modes["SL"]:
         for gas_network_instance in gas_network_instances:
-            for scenario in scenarios:
+            for scenario in scenarios[gas_network_instance]:
                 network_instance = gas_network_instance + "," + scenario
                 for interdiction_budget in list(range(Budget + 1)):
                     try:
@@ -47,7 +48,7 @@ with open("analysis.csv", 'a', newline='') as file:
                 
     for mode in modes["Enum"]:
         for gas_network_instance in gas_network_instances:
-            for scenario in scenarios:
+            for scenario in scenarios[gas_network_instance]:
                 network_instance = gas_network_instance + "," + scenario
                 for interdiction_budget in list(range(Budget + 1)):
                     import time

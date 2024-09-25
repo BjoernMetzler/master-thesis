@@ -1,0 +1,44 @@
+####################################################################################
+#   This file is part of the project MODAL-EnergyLab in the Research Campus MODAL
+#                      funded by the BMBF (05M14ZAM, 05M20ZBM)                   
+#                                                                                
+# Copyright (C) 2023                                                             
+# Zuse Institute Berlin                                                          
+# Contact: Thorsten Koch (koch@zib.de)                                           
+# All rights reserved.                                                           
+#                                                                                
+# This work is licensed under the Creative Commons Attribution 3.0 Unported License.
+# To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/ 
+# or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View,
+# California, 94041, USA.                                                           
+#                                                                                   
+#                         Please note that you have to cite                         
+# F. Hennings, "Modeling and solving real-world transient gas network transport     
+# problems using mathematical programming",                                         
+# Doctoral Thesis, Technische Universität Berlin, 2023                              
+#                               if you use this data                                
+#                                                                                   
+####################################################################################
+
+The network is a small artificial network that was created to allow for various gas 
+routing options despite its size. It consists of 39 nodes and 41 arcs, of which 28 
+are pipes, 7 are valves, 4 are control valves, and 2 are compressor stations.
+
+The backbone of the network is a circle of pipes.
+It has no principal flow direction but can be used clockwise and counter-clockwise on
+every pipe segment. The network features two low-pressure areas with restricted upper 
+pressure bounds on the corresponding nodes.
+They are located downstream of the four regulators, where the one inside the circle 
+can be served from two different network areas. To further enable different flow 
+patterns, the boundary nodes are distributed all over the network. The entries are 
+located on opposite sides and have slightly lower maximum pressure limits than the 
+rest of the nodes.
+Furthermore, each of them has a downstream compressor station to potentially increase
+the pressure of the gas entering the pipe circle. Regarding the exits, there is one 
+close to each of the entries, one in each low-pressure area, and one directly 
+connected to the pipe circle. This last exit has a high minimum pressure bound.
+
+For the network, ten stationary demand scenarios with significant mutual differences 
+have been created. For a more detailed description of the data and the creation 
+process, we refer to the dissertation of Felix Hennings, "Modeling and solving 
+real-world transient gas network transport problems using mathematical programming", 2023.

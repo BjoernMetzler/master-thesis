@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!--                                                                                   -->
+<!--   This file is part of the project MODAL-EnergyLab in the Research Campus MODAL   -->
+<!--                      funded by the BMBF (05M14ZAM, 05M20ZBM)                      -->
+<!--                                                                                   -->
+<!-- Copyright (C) 2023                                                                -->
+<!-- Zuse Institute Berlin                                                             -->
+<!-- Contact: Thorsten Koch (koch@zib.de)                                              -->
+<!-- All rights reserved.                                                              -->
+<!--                                                                                   -->
+<!-- This work is licensed under the Creative Commons Attribution 3.0 Unported License.-->
+<!-- To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/ -->
+<!-- or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View,-->
+<!-- California, 94041, USA.                                                           -->
+<!--                                                                                   -->
+<!--                         Please note that you have to cite                         -->
+<!-- F. Hennings, "Modeling and solving real-world transient gas network transport     -->
+<!-- problems using mathematical programming",                                         -->
+<!-- Doctoral Thesis, Technische Universität Berlin, 2023                              -->
+<!--                               if you use this data                                -->
+<!--                                                                                   -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<boundaryValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="http://gaslib.zib.de/Gas"
+               xsi:schemaLocation="http://gaslib.zib.de/Gas
+                                   http://gaslib.zib.de/schema/Scenario.xsd"
+               xmlns:framework="http://gaslib.zib.de/Framework">
+
+    <scenario id="GasLib_39_scenario_02">
+        <node type="entry" id="E_NW">
+            <flow bound="both" value="527.261223165998"/>
+        </node>
+        <node type="entry" id="E_SE">
+            <flow bound="both" value="498.2293229494243"/>
+        </node>
+        <node type="exit" id="X_E">
+            <flow bound="both" value="111.91796483960047"/>
+        </node>
+        <node type="exit" id="X_M">
+            <flow bound="both" value="40.99472047695816"/>
+        </node>
+        <node type="exit" id="X_N">
+            <flow bound="both" value="105.37147338905456"/>
+        </node>
+        <node type="exit" id="X_NE">
+            <flow bound="both" value="546.5045998322227"/>
+        </node>
+        <node type="exit" id="X_SW">
+            <flow bound="both" value="220.7017875775865"/>
+        </node>
+    </scenario>
+
+</boundaryValue>
