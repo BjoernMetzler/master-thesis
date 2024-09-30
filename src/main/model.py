@@ -13,7 +13,7 @@ class Single_Level_Formulation_Model:
         data: dict,
         networkInstanceName: str,
         budget: int,
-        with_loadflow_non_negative_at_entry_and_exit=True,
+        with_loadflow_non_negative_at_entry_and_exit=False,
         with_pressureLossFactor_non_negative_at_arcs=False,
         with_mathematical_varnames_instead_of_GRB_model_names=False,
     ):
@@ -27,9 +27,9 @@ class Single_Level_Formulation_Model:
         # Data conversion into Model
         self.nodes_list = data["nodes"][None]  # List of nodes
         self.arcs_list = data["arcs"][None]  # List of arcs
-
+        print(self.arcs_list)
         # Filter for duplicate arcs (erase duplicate arcs)
-        self.arcs_list = list(set(data["arcs"][None]))
+        #self.arcs_list = list(set(data["arcs"][None]))
         
         self.interdictionBudget_int = budget  # Budget for interdiction
         self.activeElements_list = data["activeElements"][
@@ -1184,7 +1184,7 @@ class Single_Level_Formulation_Model:
         self.add_dual_feasibility_constraints()
         self.add_SOS1()
         self.add_WCcheck_constraints()
-        self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
+        self.m.addConstr((quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int),name="interdiction_budget")
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
     
         # Define the path where the actual Gurobi-Log-Files are going 
@@ -1236,7 +1236,7 @@ class Single_Level_Formulation_Model:
         self.add_dual_feasibility_constraints()
         self.add__complementary_constraints()
         self.add_WCcheck_constraints()
-        self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
+        self.m.addConstr((quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int),name="interdiction_budget")
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
         
         # Define the path where the actual Gurobi-Log-Files are going 
@@ -1288,7 +1288,7 @@ class Single_Level_Formulation_Model:
         self.add_dual_feasibility_constraints()
         self.add_CC_bigM_reformulation()
         self.add_WCcheck_constraints()
-        self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
+        self.m.addConstr((quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int),name="interdiction_budget")
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
         
         # Define the path where the actual Gurobi-Log-Files are going 
@@ -1357,7 +1357,7 @@ class Single_Level_Formulation_Model:
         # Afterwards we look up the interdiction decision with the highest objective value that is still feasible
         self.add_primal_feasibility_constraints()
         self.add_WCcheck_constraints()
-        self.m.addConstr(quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int)
+        self.m.addConstr((quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int),name="interdiction_budget")
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list), GRB.MINIMIZE)
         
             

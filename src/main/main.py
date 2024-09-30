@@ -134,7 +134,7 @@ lib.gaslibparse.helpers.print_pyomoData(network.pyomoData[None], displayModes, n
 
 
 def run_method(mode, pyomoData, networkInstanceName, Budget):
-    model = Single_Level_Formulation_Model(pyomoData,networkInstanceName,Budget,False)
+    model = Single_Level_Formulation_Model(pyomoData,networkInstanceName,Budget)
     
     if mode == "SL_SOS1":
         result= model.single_level_model_SOS1()
