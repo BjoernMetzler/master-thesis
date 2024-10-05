@@ -1,0 +1,735 @@
+\section{Reformulierung mit KKT und bigM}
+
+
+\begin{align*}
+    \max_{x} \quad \sum_{u \in V_-} \lambda_u l_u&& \quad\\
+    s.t. \quad x \in X \subset \{0,1\}^A,\\
+    \quad \quad (\lambda, q , \pi) \in S(x),
+\end{align*}
+
+Wobei $S(x)$ die $x-$parametrisierte Optimallösungsmenge des Lower-Level-Problems 
+
+\begin{align*}
+\min_{\lambda, q, \pi} \sum_{u \in V_-} \lambda_u l_u \\
+\sum_{a \in \delta^{out}(v)} q_a - \sum_{a \in \delta^{in}(v)} q_a &= (1-\lambda_v)l_v, &&\forall v \in V_+ \\
+\sum_{a \in \delta^{out}(v)} q_a - \sum_{a \in \delta^{in}(v)} q_a &= -(1-\lambda_v)l_v, &&\forall v \in V_-, &[\alpha_v^{V}] \\
+\sum_{a \in \delta^{out}(v)} q_a - \sum_{a \in \delta^{in}(v)} q_a &= 0, &&\forall v \in V_0 := V \setminus (V_+ \cup V_-) \\
+(1-x_a)q_a^- &\leq q_a \leq (1-x_a)q_a^+, &&\forall a \in A, &[\delta_a^\pm] \\
+x_a M_a^- &\leq \pi_u - \pi_v - \hat{\Lambda}_a q_a \leq x_a M_a^+ , &&\forall a=(u,v) \in A, &[\epsilon_a^\pm] \\
+\pi_u^- &\leq \pi_u \leq \pi_u^+, &&\forall u \in V, &[\zeta_u^\pm] \\
+0 &\leq \lambda_u \leq 1, &&\forall u \in V_-, &[\mu_u^\pm] \\
+\lambda_u^- &\leq \lambda_u \leq 1, &&\forall u \in V_+, &[\eta_u^\pm]
+\end{align*}
+\newpage
+
+
+\subsection{Herleitung der KKT-Bedingungen aus der Lagrange-Funktion des Lower-Level-Problems}
+
+\label{problem::Lower_Level_problem::KKT}
+\begin{align*}
+(5.1) & \quad - \alpha_u^{V} l_u - \eta_u^- + \eta_u^+ = 0, &&\forall u \in V_+ \\
+(5.2) & \quad l_u + \alpha_u^{V} l_u  - \mu_u^- + \mu_u^+ = 0, &&\forall u \in V_- \\
+(5.3) & \quad -\alpha_l^{V} + \alpha_k^{V} - \delta_a^- + \delta_a^+ + \epsilon_a^- \hat{\Lambda}_a - \epsilon_a^+ \hat{\Lambda}_a = 0, &&\forall a=(l,k) \in A: l \in V,~ k \in V,~ l \neq k \\
+(5.4) & \quad \sum_{a \in \delta^{out}(u)} (\epsilon_a^+ - \epsilon_a^-) - \sum_{a \in \delta^{in}(u)} (\epsilon_a^+ - \epsilon_a^-) + \zeta_u^+ - \zeta_u^- = 0, &&\forall u \in V \\
+(5.5) & \quad \delta^+, \delta^-, \epsilon^+, \epsilon^-, \zeta^+, \zeta^-, \mu^+, \mu^-, \eta^+, \eta^- \geq 0 \\
+(5.6) & \quad \delta_a^- \left( q_a - (1-x_a)q_a^- \right) = 0, &&\forall a \in A \\
+(5.7) & \quad \delta_a^+ \left( (1-x_a)q_a^+ - q_a \right) = 0, &&\forall a \in A \\
+(5.8) & \quad \epsilon_a^- \left( (\pi_l - \pi_k - \hat{\Lambda}_a q_a) - x_a M_a^- \right) = 0, &&\forall a = (l,k) \in A \\
+(5.9) & \quad \epsilon_a^+ \left( x_a M_a^+ - (\pi_l - \pi_k - \hat{\Lambda}_a q_a) \right) = 0, &&\forall a = (l,k) \in A \\
+(5.10) & \quad \zeta_u^- (\pi_u - \pi_u^-) = 0, &&\forall u \in V \\
+(5.11) & \quad \zeta_u^+ (\pi_u^+ - \pi_u) = 0, &&\forall u \in V \\
+(5.12) & \quad \mu_u^- \lambda_u = 0, &&\forall u \in V_- \\
+(5.13) & \quad \mu_u^+ (1 - \lambda_u) = 0, &&\forall u \in V_- \\
+(5.14) & \quad \eta_u^- (\lambda_u - \lambda_u^-) = 0, &&\forall u \in V_+ \\
+(5.15) & \quad \eta_u^+ (1 - \lambda_u) = 0, &&\forall u \in V_+ \\
+(5.16) & \quad \sum_{a \in \delta^{out}(u)} q_a - \sum_{a \in \delta^{in}(u)} q_a = (1-\lambda_u)l_u, &&\forall u \in V_+ \\
+(5.17) & \quad \sum_{a \in \delta^{out}(u)} q_a - \sum_{a \in \delta^{in}(u)} q_a = -(1-\lambda_u)l_u, &&\forall u \in V_- \\
+(5.18) & \quad \sum_{a \in \delta^{out}(u)} q_a - \sum_{a \in \delta^{in}(u)} q_a = 0, &&\forall u \in V_0 := V \setminus (V_+ \cup V_-) \\
+(5.19) & \quad x_a M_a^- \leq \pi_l - \pi_k - \hat{\Lambda}_a q_a \leq x_a M_a^+ , &&\forall a=(l,k) \in A \\
+(5.20) & \quad \pi_u^- \leq \pi_u \leq \pi_u^+, &&\forall u \in V \\
+(5.21) & \quad \lambda_u^-\leq \lambda_u \leq 1, &&\forall u \in V_+\\
+(5.22) & \quad 0 \leq \lambda_u \leq 1, &&\forall u \in V_-\\
+(5.23) & \quad (1-x_a)q_a^- \leq q_a \leq (1-x_a)q_a^+, &&\forall a \in A
+\end{align*}
+\newpage
+
+\subsection{Reformulierung der KKT-Komplementaritätsbedingungen}
+\label{problem::Lower_Level_problem::CC_bigM_reform}
+\begin{align*}
+&0 \leq \delta_a^- \leq ~_0\Delta_a^{\delta^-} z_a^{\delta^-}, &&\forall a \in A\\
+&0 \leq (q_a - (1 - x_a) q_a^-) \leq ~_1\Delta_a^{\delta^-} (1- z_a^{\delta^-}), &&\forall a \in A\\
+&0 \leq \delta_a^+ \leq ~_0\Delta_a^{\delta^+} z_a^{\delta^+}, &&\forall a \in A \\
+&0 \leq ((1 - x_a) q_a^+ - q_a) \leq ~_1\Delta_a^{\delta^+} (1- z_a^{\delta^+}), &&\forall a \in A \\
+&0 \leq \epsilon_a^- \leq ~_0\Delta_a^{\epsilon^-} z_a^{\epsilon^-}, &&\forall a=(l,k) \in A \\
+&0 \leq (\pi_l -\pi_k - \hat{\Lambda}_a q_a - x_a M_a^-) \leq ~_1\Delta_a^{\epsilon^-} (1- z_a^{\epsilon^-}), &&\forall a=(l,k) \in A \\
+&0 \leq \epsilon_a^+ \leq ~_0\Delta_a^{\epsilon^+} z_a^{\epsilon^+}, &&\forall a=(l,k)\in A \\
+&0 \leq (x_a M_a^+ - (\pi_l -\pi_k - \hat{\Lambda}_a q_a)) \leq ~_1\Delta_a^{\epsilon^+} (1- z_a^{\epsilon^+}), &&\forall a=(l,k)\in A \\
+&0 \leq \zeta_u^- \leq ~_0\Delta_u^{\zeta^-} z_u^{\zeta^-}, &&\forall u \in V \\
+&0 \leq (\pi_u - \pi_u^-) \leq ~_1\Delta_u^{\zeta^-} (1- z_u^{\zeta^-}), &&\forall u \in V \\
+&0 \leq \zeta_u^+ \leq ~_0\Delta_u^{\zeta^+} z_u^{\zeta^+}, &&\forall u \in V \\
+&0 \leq (\pi_u^+ - \pi_u) \leq ~_1\Delta_u^{\zeta^+} (1- z_u^{\zeta^+}), &&\forall u \in V \\
+&0 \leq \mu_u^- \leq ~_0\Delta_u^{\mu^-} z_u^{\mu^-}, &&\forall u \in V_- \\
+&0 \leq \lambda_u \leq ~_1\Delta_u^{\mu^-} (1- z_u^{\mu^-}), &&\forall u \in V_- \\
+&0 \leq \mu_u^+ \leq ~_0\Delta_u^{\mu^+} z_u^{\mu^+}, &&\forall u \in V_- \\
+&0 \leq (1 - \lambda_u) \leq ~_1\Delta_u^{\mu^+} (1- z_u^{\mu^+}), &&\forall u \in V_- \\
+&0 \leq \eta_u^- \leq ~_0\Delta_u^{\eta^-} z_u^{\eta^-}, &&\forall u \in V_+ \\
+&0 \leq (\lambda_u - \lambda_u^-) \leq ~_1\Delta_u^{\eta^-} (1- z_u^{\eta^-}), &&\forall u \in V_+ \\
+&0 \leq \eta_u^+ \leq ~_0\Delta_u^{\eta^+} z_u^{\eta^+}, &&\forall u \in V_+ \\
+&0 \leq (1 - \lambda_u) \leq ~_1\Delta_u^{\eta^+} (1- z_u^{\eta^+}), &&\forall u \in V_+ \\
+&z_a^{\delta^-}, ~z_a^{\delta^+},~z_a^{\epsilon^-}, ~z_a^{\epsilon^+},~ z_u^{\zeta^-},~z_u^{\zeta^+},~ z_u^{\mu^-}, ~z_u^{\mu^+},~ z_u^{\eta^-},~ z_u^{\eta^+} \in \{0,1\}, &&\forall a \in A, ~\forall u \in V_+ \cup V_- \cup V_0\\
+\end{align*}
+\newpage
+
+\begin{lemma}[Obere und untere Schranken für Primalvariablen] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der primal zulässig ist, folgende Abschätzung:
+    \begin{enumerate}
+        \item $\forall a \in A:$ 
+        $$0 \leq q_a - (1 - x_a) q_a^- \leq ~_1\Delta_a^{\delta^-} = q_a^+-q_a^-.$$
+        \item $\forall a \in A:$ 
+        $$0 \leq (1 - x_a) q_a^+ -q_a \leq ~_1\Delta_a^{\delta^+} = q_a^+-q_a^-.$$
+        \item $\forall a =(l,k) \in A, ~l \neq k:$ 
+        $$ 0 \leq (\pi_l - \pi_k - \hat{\Lambda_a} q_a) - x_a M_a^- \leq ~_1\Delta_a^{\epsilon^-} = M_a^+ - M_a^- = \pi_l^+ -   \pi_l^- + \pi_k^+ - \pi_k^-.$$
+        \item $\forall a = (l,k) \in A, ~l \neq k:$ 
+        $$0 \leq x_a M_a^+ - (\pi_l - \pi_k - \hat{\Lambda_a} q_a) \leq ~_1\Delta_a^{\epsilon^+} = M_a^+ - M_a^- = \pi_l^+ - \pi_l^- + \pi_k^+ - \pi_k^-.$$
+        \item $\forall u \in V:$ 
+        $$0 \leq \pi_u - \pi_u^-\leq ~_1\Delta_u^{\zeta^-} = \pi_u^+ - \pi_u^-.$$
+        \item $\forall u \in V:$ 
+        $$0 \leq \pi_u^+ - \pi_u\leq ~_1\Delta_u^{\zeta^+} = \pi_u^+ - \pi_u^-.$$
+        \item $\forall u \in V_-:$ 
+        $$0 \leq \lambda_u \leq ~_1\Delta_u^{\mu^-} = 1.$$
+        \item $\forall u \in V_-:$
+        $$0 \leq 1 - \lambda_u \leq ~_1\Delta_u^{\mu^+} = 1.$$
+        \item $\forall u \in V_+:$ 
+        $$0 \leq \lambda_u - \lambda_u^- \leq ~_1\Delta_u^{\eta^-} = 1 - \lambda_u^-.$$
+        \item $\forall u \in V_+:$ 
+        $$0 \leq 1 - \lambda_u \leq ~_1\Delta_u^{\eta^+} = 1 - \lambda_u^-.$$
+    \end{enumerate}
+
+\begin{proof}
+    Der Beweis dieser Schranken folgt unmittelbar aus den gegebenen Schranken des Follower-Problems und Fallunterscheidungen zwischen einer intakten Kante $x_a=0,~a \in A$ und einer zerstörten Kante $x_a=1, ~a \in A.$
+\end{proof}
+\end{lemma}
+\newpage
+
+\begin{lemma}[Schranken für $\zeta$ (ohne Skalierung)]
+Seien die reformulierten KKT-Bedingungen von (1.2) gegeben und $\zeta_u^+$ und $\zeta_u^-$ sind die korrespondierenden Dualvariablen. Dann gilt $$\zeta_u^+, ~\zeta_u^- \leq \Big(|\delta^{in}(u)|+ |\delta^{out}(u)|\Big)\max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}, ~_0\Delta_a^{\epsilon^-}\right\}.$$ 
+\begin{proof}
+    Je höchstens eine der beiden Variablen $\zeta_u^+$ und $\zeta_u^-$ ist zur gleichen Zeit aktiv. Daher kann man folgende Reduktion der Gleichung (5.4) als auch die aus den Beschränkungen für die anderen Variablen, welche wie in Lemma (1.12) gewählt sind wie folgt ausnutzen:
+    \begin{align*}
+    &\quad \sum_{a \in \delta^{out}(u)}{(\epsilon_a^+ - \epsilon_a^-)} - \sum_{a \in \delta^{in}(u)}{(\epsilon_a^+ - \epsilon_a^-)} - \zeta_u^- = 0 \\
+    &\Longleftrightarrow \zeta_u^-  = \sum_{a \in \delta^{out}(u)} {(\epsilon_a^+ - \epsilon_a^-)} - \sum_{a \in \delta^{in}(u)} {(\epsilon_a^+ - \epsilon_a^-)} \\
+    &\leq \sum_{a \in \delta^{out}(u)} {(\epsilon_a^+)} - \sum_{a \in \delta^{in}(u)} {(- \epsilon_a^-)} \\
+    &\leq \sum_{a \in \delta^{out}(u)} {_0\Delta_a^{\epsilon^+}} + \sum_{a \in \delta^{in}(u)} {_0\Delta_a^{\epsilon^-}} \\
+    &\leq |\delta^{out}(u)|\max_{a \in \delta^{out}(u)} {_0\Delta_a^{\epsilon^+}} + |\delta^{in}(u)|\max_{a \in \delta^{in}(u)} {_0\Delta_a^{\epsilon^-}} \\
+    %&\leq |\delta^{out}(u)|\max_{a \in \delta^{out}(u)} {_0\Delta_a^{\epsilon^+}} + |\delta^{in}(u)|\max_{a \in \delta^{in}(u)} {_0\Delta_a^{\epsilon^+}} \\
+    &\leq \Big(|\delta^{out}(u)|+ |\delta^{in}(u)|\Big)\max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}, ~_0\Delta_a^{\epsilon^-}\right\} \\
+    \end{align*}
+    und somit gilt analog für $\zeta_u^-$
+    \begin{align*}
+    &\quad \sum_{a \in \delta^{out}(u)} {(\epsilon_a^+ - \epsilon_a^-)} - \sum_{a \in \delta^{in}(u)} {(\epsilon_a^+ - \epsilon_a^-)} + \zeta_u^+ = 0 \\
+    &\Longleftrightarrow \zeta_u^+  = \sum_{a \in \delta^{in}(u)} {(\epsilon_a^+ - \epsilon_a^-)} - \sum_{a \in \delta^{out}(u)} {(\epsilon_a^+ - \epsilon_a^-)} \\
+    &\leq \sum_{a \in \delta^{in}(u)} {(\epsilon_a^+)} - \sum_{a \in \delta^{out}(u)} {(- \epsilon_a^-)} \\
+    &\leq \sum_{a \in \delta^{in}(u)} {_0\Delta_a^{\epsilon^+}} + \sum_{a \in \delta^{out}(u)} {_0\Delta_a^{\epsilon^-}} \\
+    &\leq |\delta^{in}(u)|\max_{a \in \delta^{in}(u)} {_0\Delta_a^{\epsilon^+}} + |\delta^{out}(u)|\max_{a \in \delta^{out}(u)} {_0\Delta_a^{\epsilon^-}} \\
+    %&\leq |\delta^{in}(u)|\max_{a \in \delta^{in}(u)} {_0\Delta_a^{\epsilon^+}} + |\delta^{out}(u)|\max_{a \in \delta^{out}(u)} {_0\Delta_a^{\epsilon^+}} \\
+    &\leq \Big(|\delta^{in}(u)|+ |\delta^{out}(u)|\Big)\max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}, ~_0\Delta_a^{\epsilon^-}\right\}\\
+    \end{align*}
+\end{proof}
+\end{lemma}
+\newpage
+
+\begin{lemma}[Was wir bisher wissen. (Ohne Skalierung)]
+    $$\zeta_u^-,~\zeta_u^+ \leq \Big(|\delta^{in}(u)|+ |\delta^{out}(u)|\Big)\max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}, ~_0\Delta_a^{\epsilon^-}\right\},~\forall u \in V$$
+    $$\mu_u^-,~\mu_u^+ \leq \max_{u \in V} \left\{ l_u (1 + |\alpha_u^V|)\right\},~\forall u \in V_-$$
+    $$\eta_u^-,~\eta_u^+ \leq \max_{u \in V} \left\{ l_u |\alpha_u^V|\right\},~\forall u \in V_+$$
+    Aus (5.3), $x_a = 0$ und $\delta_a^- = 0:$
+    $$\delta_a^+ = \alpha_l^V - \alpha_k^V - \epsilon_a^- \hat{\Lambda}_a + \epsilon_a^+ \hat{\Lambda}_a \leq 2 \max_{u \in V} \left\{|\alpha_u^V|\right\} + \max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}, ~_0\Delta_a^{\epsilon^-}\right\} \hat{\Lambda}_a$$
+    Aus (5.3), $x_a = 0$ und $\delta_a^+ = 0:$
+    $$\delta_a^- = \alpha_k^V - \alpha_l^V + \epsilon_a^- \hat{\Lambda}_a - \epsilon_a^+ \hat{\Lambda}_a \leq 2 \max_{u \in V} \left\{|\alpha_u^V|\right\} + \max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}, ~_0\Delta_a^{\epsilon^-}\right\}\hat{\Lambda}_a$$
+    Aus (5.3), $x_a = 1$ und $\epsilon_a^- = 0:$
+    $$\epsilon_a^+ \hat{\Lambda}_a = \alpha_k^V - \alpha_l^V -\delta_a^- + \delta_a^+ \leq 2 \max_{u \in V} \left\{|\alpha_u^V|\right\} + \delta_a^+$$
+    Aus (5.3), $x_a = 1$ und $\epsilon_a^+ = 0:$
+    $$\epsilon_a^- \hat{\Lambda}_a = \alpha_l^V - \alpha_k^V + \delta_a^- - \delta_a^+ \leq 2 \max_{u \in V} \left\{|\alpha_u^V|\right\} + \delta_a^-$$
+
+
+%     \begin{lemma}
+%     Hier zeigen wir folgend aus (5.4) und (5.3):
+%     Allgemein geschrieben ergibt sich folgende Gleichung.
+%     \begin{align*}
+%         \epsilon_{(l,k)}^+ - \epsilon_{(l,k)}^- &=  \sum_{z \in \delta^{out}(l) \setminus (l,k)} \left(\epsilon_{z}^+ - \epsilon_{z}^- \right) - \sum_{z \in \delta^{in}(l)} \left(\epsilon_{z}^+ - \epsilon_{z}^- \right) +\zeta_l^+ - \zeta_l^-\\
+%         &=  \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k)} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l)} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right) +\zeta_l^+ - \zeta_l^-
+%     \end{align*}
+%     $l \in V_0:$
+%     \begin{align*}
+%         \epsilon_{(l,k)}^+ - \epsilon_{(l,k)}^- &=  \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_0} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_0} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_+} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_+} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_-} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_-} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & +\zeta_l^+ - \zeta_l^-\\
+%         &=  \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_0} \left(\dfrac{\delta_{(l,v)}^- - \delta_{(l,v)}^+}{\hat{\Lambda}_{(l,v)}} \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_0} \left(\dfrac{\delta_{(u,l)}^- - \delta_{(u,l)}^+}{\hat{\Lambda}_{(u,l)}} \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_+} \left(\dfrac{\alpha_v^{V_+} + \delta_{(l,v)}^- - \delta_{(l,v)}^+}{\hat{\Lambda}_{(l,v)}} \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_+} \left(\dfrac{-\alpha_u^{V_+} + \delta_{(u,l)}^- - \delta_{(u,l)}^+}{\hat{\Lambda}_{(u,l)}} \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_-} \left(\dfrac{\alpha_v^{V_-} + \delta_{(l,v)}^- - \delta_{(l,v)}^+}{\hat{\Lambda}_{(l,v)}} \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_-} \left(\dfrac{-\alpha_u^{V_-} + \delta_{(u,l)}^- - \delta_{(u,l)}^+}{\hat{\Lambda}_{(u,l)}} \right)\\
+%         & +\zeta_l^+ - \zeta_l^-\\
+%     \end{align*}
+%     $l \in V_+:$
+%     \begin{align*}
+%         \epsilon_{(l,k)}^+ - \epsilon_{(l,k)}^- &=  \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_0} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_0} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_+} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_+} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_-} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_-} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & +\zeta_l^+ - \zeta_l^-\\
+%     \end{align*}
+%     $l \in V_-:$
+%     \begin{align*}
+%         \epsilon_{(l,k)}^+ - \epsilon_{(l,k)}^- &=  \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_0} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_0} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_+} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_+} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & + \sum_{(l,v) \in \delta^{out}(l) \setminus (l,k): ~ v \in V_-} \left(\epsilon_{(l,v)}^+ - \epsilon_{(l,v)}^- \right) - \sum_{(u,l) \in \delta^{in}(l): ~ u \in V_-} \left(\epsilon_{(u,l)}^+ - \epsilon_{(u,l)}^- \right)\\
+%         & +\zeta_l^+ - \zeta_l^-\\
+%     \end{align*}
+% \end{lemma}
+% \newpage
+
+\end{lemma}
+\begin{theorem}[Variablen-Schranken für die Dualvariablen]
+
+    Sei $(\lambda^*, q^*, \pi^*)$ eine Optimallösung des Lower-Level-Problems  in Kapitel 1.1 . 
+    Dann existieren Dualvariablen, sodass $((\lambda^*, q^*, \pi^*),(\alpha^*,\delta^{+^*},\delta^{-^*},\epsilon^{+^*},\epsilon^{-^*},\zeta^{+^*},\zeta^{-^*},\mu^{+^*},\mu^{-^*},\eta^{+^*},\eta^{-^*}))$
+    die KKT-Punkt von Kapitel 1.1 erfüllt. 
+    Zu jedem solchen KKT-Punkt des originalen Lower-Level-Problems aus Kapitel 1.1, 
+    existiert eine Optimallösung von Kapitel 1.2 mit gleichem Zielfunktionswert und primaler Lösung $(\lambda^*, q^*, \pi^*)$, 
+    ein KKT-Punkt der reformulierten KKT-Bedingungen (5.1 - 5.9), (5.16 - 5.23) und Kapitel 1.2 ist mit den bewiesenen primalen Schranken der Lemmata (1.1). 
+    Zusätzlich sind die Dualvariablen des reformulierten Problems beschränkt durch folgende Konstanten:\\
+
+    \begin{align}
+        & \forall a \in A: &_0 \Delta^{\delta^-}_a := 1\\
+        & \forall a \in A: &_0 \Delta^{\delta^+}_a := 1\\
+        & \forall a \in A: &_0 \Delta^{\epsilon^-}_a := \max_{a \in A}\left\{\dfrac{1}{\hat{\Lambda}_a}\right\}\\
+        & \forall a \in A: &_0 \Delta^{\epsilon^+}_a := \max_{a \in A}\left\{\dfrac{1}{\hat{\Lambda}_a}\right\}\\
+        & \forall a \in A: &_0 \Delta^{\zeta^-}_u := \left(|\delta^{in}(u)| + |\delta^{out}(u)|\right)\max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}\right\}\\
+        & \forall u \in V: &_0 \Delta^{\zeta^+}_u := \left(|\delta^{in}(u)| + |\delta^{out}(u)|\right)\max_{a \in A} \left\{_0\Delta_a^{\epsilon^+}\right\}\\
+        & \forall u \in V_+: &_0 \Delta^{\eta^-}_u := l_u\\  
+        & \forall u \in V_+: &_0 \Delta^{\eta^+}_u := l_u\\
+        & \forall u \in V_-: &_0 \Delta^{\mu^-}_u := 2 l_u\\
+        & \forall u \in V_-: &_0 \Delta^{\mu^+}_u := 2 l_u
+    \end{align}
+
+    % \begin{align}
+    %     &(i)~~ &0 \leq \delta_a^- \leq ~_0\Delta^{\delta^-}_a, &\forall a \in A\\
+    %     &(ii)~~ &0 \leq \delta_a^+ \leq  ~_0\Delta^{\delta^+}_a, &\forall a \in A\\
+    %     &(iii)~~&0 \leq \epsilon_a^- \leq  ~_0\Delta^{\epsilon^-}_a,&\forall a \in A\\
+    %     &(iv)~~ &0 \leq \epsilon_a^+ \leq ~_0\Delta^{\epsilon^+}_a, &\forall a \in A\\
+    %     &(v)~~ &0 \leq \zeta_u^- \leq ~_0\Delta^{\zeta^-}_u, &\forall u \in V\\
+    %     &(vi)~~ &0 \leq \zeta_u^+ \leq ~_0\Delta^{\zeta^+}_u, &\forall u \in V\\
+    %     &(vii)~~&0 \leq \eta_u^- \leq ~_0\Delta^{\eta^-}_u, &\forall u \in V_+\\
+    %     &(viii)~~&0 \leq \eta_u^+ \leq ~_0\Delta^{\eta^+}_u, &\forall u \in V_+\\
+    %     &(ix).(a)~~& -\frac{1}{l_u} \leq \alpha_u \leq \frac{1}{l_u}, &\forall u \in V_+\\
+    %     &(ix).(b)~~& -1 \leq \alpha_u \leq 1, &\forall u \in V_0\\
+    %     &(ix).(c)~~& -1 \leq \alpha_u \leq 1, &\forall u \in V_-\\
+    %     &(x)~~ &0 \leq \mu_u^- \leq ~_0\Delta^{\mu^-}_u, &\forall u \in V_-\\
+    %     &(xi)~~ &0 \leq \mu_u^+ \leq ~_0\Delta^{\mu^+}_u, &\forall u \in V_-\\
+    % \end{align}
+
+    \begin{proof}
+        Da die Dualvariablen aufgrund der Linearität des Problems in keiner Weise als über die Komplementaritätsbedingungen mit den Primalvariablen gekoppelt sind, können wir die Dualvariablen unabhängig von den Primalvariablen und deren Schranken beschränken.\\
+        Wähle hierzu eine hinreichend große Konstante $\Omega > 0$. Dann erhalten wir einen KKT-Punkt $((\lambda^{'}, q^{'}, \pi^{'}),(\alpha^{'},\delta^{+^{'}},\delta^{-^{'}},\epsilon^{+^{'}},\epsilon^{-^{'}},\zeta^{+^{'}},\zeta^{-^{'}},\mu^{+^{'}},\mu^{-^*},\eta^{+^{'}},\eta^{-^{'}}))$, der die Schranken erfüllt aus dem ursprünglichen KKT-Punkt wie folgt:
+        \begin{enumerate}[start=1,label={(\roman*):}]
+            \item $\lambda^{'} = \lambda^*$;\quad$q^{'} = q^*$;\quad$\pi^{'} = \pi^*$
+            \item $\alpha^{'} = \dfrac{\alpha^*}{\Omega}$;\quad$\delta^{+^{'}} = \dfrac{\delta^{+^*}}{\Omega}$;\quad$\delta^{-^{'}} = \dfrac{\delta^{-^*}}{\Omega}$;\quad $\epsilon^{+^{'}} = \dfrac{\epsilon^{+^*}}{\Omega}$;\quad$\epsilon^{-^{'}} = \dfrac{\epsilon^{-^*}}{\Omega}$;\quad $\zeta^{+^{'}} = \dfrac{\zeta^{+^*}}{\Omega}$;\quad$\zeta^{-^{'}} = \dfrac{\zeta^{-^*}}{\Omega}$;\quad$\eta^{+^{'}} = \dfrac{\eta^{+^*}}{\Omega}$;\quad$\eta^{-^{'}} = \dfrac{\eta^{-^*}}{\Omega}$
+            \item $\mu^{+^{'}} = -l_u + \dfrac{l_u}{\Omega} + \dfrac{\mu^{+^*}}{\Omega}$;\quad$\mu^{-^{'}} = l_u - \dfrac{l_u}{\Omega} + \dfrac{\mu^{-^*}}{\Omega}$
+        \end{enumerate}
+
+        Nun ist nachzuweisen, dass diese Punkte immer noch die KKT-Bedingungen erfüllen. Wobei nur (5.1 - 5.4) nicht trivial zu überprüfen sind.
+
+
+        
+        % Durch Betrachtung von Gleichung (5.2) ergibt sich, dass nur folgende drei Fälle existieren:\\
+        % (a) $\mu_u^- = 0:$
+        % $$l_u + \alpha_u l_u + \mu_u^+ = 0 \Longleftrightarrow \alpha_u = \frac{-l_u-\mu_u^+}{l_u} \leq \frac{-l_u}{l_u} \leq -1 \leq 1.$$
+        % (b) $\mu_u^+ = 0:$
+        % $$l_u + \alpha_u l_u - \mu_u^- = 0 \Longleftrightarrow \alpha_u = \frac{\mu_u^- - l_u}{l_u} \geq -1 $$
+        % (c) $\mu_u^- = 0$ und $\mu_u^+ = 0:$
+        % $$l_u + \alpha_u l_u = 0 \Longleftrightarrow \alpha_u = -1 \leq 1$$
+
+        % Demnach kann man schlussfolgern, dass insbesondere 
+        % $$|\alpha_u| \leq 1.$$
+        % Setze $\alpha_u^{V^{'}} = \dfrac{\alpha_u^{V^*}}{\Omega}.$
+        
+        % Zu (x) und (xi):\\
+        % Betrachte hierzu Gleichung (5.2). Wir wissen, dass wir stets nur höchstens eine Schranke pro Kante erfüllen können. D.h. entweder $\mu_u^- = 0$ oder $\mu_u^+ = 0$.\\
+        % Der Fall, dass $\mu_u^- = 0$ und $\mu_u^+ = 0$ ist, führt zu $\alpha_u = -1,~\forall u \in V_-.$ Dies bringt für $\mu_u$ allerdings keine neuen Erkenntnisse mit sich. Außer, dass die oberen bzw. unteren Schranken, die wir im Folgenden herleiten, immer noch erfüllt sind.\\
+        % \\  
+        % Damit ergibt sich für:\\
+        % $\mu_u^+ = 0$: \\
+        % $$l_u + \alpha_u l_u - \mu_u^- = 0$$
+        % $$ \Longleftrightarrow 0 \leq \mu_u^- = + l_u + l_u \alpha_u \leq l_u + |\alpha_u| l_u$$
+        % Mit (ix).(c) folgt:
+        % $$ \mu_u^- \leq l_u + \max_{u \in V}\{1; \frac{1}{l_u}\}.$$
+        % Setze $\mu_u^{-^{'}} = \Omega l_u + \dfrac{\mu_u^{-^{*}}}{\Omega} - \dfrac{l_u}{\Omega}$.
+
+        
+        % $\mu_u^{-^{'}}= 0$: \\
+        % $$l_u + \alpha_u l_u + \mu_u^+ = 0$$
+        % $$ \Longleftrightarrow 0 \leq \mu_u^+ = - l_u - l_u \alpha_u \leq l_u + |\alpha_u| l_u$$
+        % Mit (ix).(c) folgt:
+        % $$ \mu_u^+ \leq l_u + \max_{u \in V}\{1; \frac{1}{l_u}\}.$$
+        % Setze $\mu_u^{+^{'}} = - \Omega l_u + \dfrac{\mu_u^{+^*}}{\Omega} + \dfrac{l_u}{\Omega}$.
+        
+        % \newpage
+
+
+        % Die bigM-Schranken der Dualvariablen $_0\Delta$ sind mit den hier bewiesenen oberen Schranken zu identifizieren und erfüllen dann auch die reformulierten Komplementaritätsbedingungen \eqref{problem::Lower_Level_problem::CC_bigM_reform}.
+        % Somit ist eine Beschränkung der nicht-negativen Dualvariablen nach den oben gegebenen Schranken (i)-(x) bewiesen und es 
+        % bleibt noch zu zeigen, dass $((\lambda^*, q^*, \pi^*),(\alpha^{'},\delta^{+^{'}},\delta^{-^{'}},\epsilon^{+^{'}},\epsilon^{-^{'}},\zeta^{+^{'}},\zeta^{-^{'}},\mu^{+^{'}},\mu^{-^{'}},\eta^{+^{'}},\eta^{-^{'}}))$ auch die KKT-Bedingungen des originalen Problems \eqref{problem::Lower_Level_problem::KKT} erfüllt:
+
+        \begin{itemize}
+            \item Gleichung (5.1) ist erfüllt, da mit $$-\alpha_u^{V^{*}} l_u - \eta_u^{-^{*}} +\eta_u^{+^{*}} = 0$$ auch folgende Gleichung gilt: $$- \alpha_u^{V^{'}} l_u - \eta_u^{-^{'}} +\eta_u^{+^{'}} = \frac{1}{\Omega} \left(- \alpha_u^{V^{*}} l_u - \eta_u^{-^{*}} +\eta_u^{+^{*}} \right) = 0, \forall u \in V_+$$ womit die duale Zulässigkeit von Gleichung (5.1) gezeigt ist.
+
+            \item Gleichung (5.2) ist erfüllt, da für
+            \begin{enumerate}
+                \item $\mu_u^{+^{'}} = 0:$ Dann folgt aus 
+                $$(1 + \alpha_u^{V^{*}}) l_u  - \mu_u^{-^{*}} = 0$$ auch folgende Gleichung $$(1 + \alpha_u^{V^{'}}) l_u  - \mu_u^{-^{'}} = (1 + \dfrac{\alpha_u^{V^{*}}}{\Omega}) l_u  - (l_u - \dfrac{l_u}{\Omega} + \dfrac{\mu^{-^*}}{\Omega}) = \dfrac{1}{\Omega} (\alpha_u^{V^{*}} l_u+ l_u - \mu_u^{-^*}) = 0, \quad \forall u \in V_-$$
+                \item $\mu_u^{-^{'}} = 0:$ Dann folgt aus 
+                $$(1 + \alpha_u^{V^{*}}) l_u  + \mu_u^{+^{*}} = 0$$ auch folgende Gleichung $$(1 + \alpha_u^{V^{'}}) l_u  + \mu_u^{+^{'}} = (1 + \dfrac{\alpha_u^{V^{*}}}{\Omega}) l_u  + (-l_u + \dfrac{l_u}{\Omega} + \dfrac{\mu^{+^*}}{\Omega}) = \dfrac{1}{\Omega} (\alpha_u^{V^{*}} l_u+ l_u + \mu_u^{+^*}) = 0, \quad \forall u \in V_-$$
+            \end{enumerate}
+            womit die duale Zulässigkeit von Gleichung (5.2) gezeigt ist.
+
+            \item
+            Gleichung (5.3) ist erfüllt, da mit $$-\alpha_l^{V^{*}} + \alpha_k^{V^{*}} -\delta_a^{-^{*}} +\delta_a^{+^{*}} + \epsilon_a^{-^{*}} \hat{\Lambda}_a -  \epsilon_a^{+^{*}} \hat{\Lambda}_a = 0$$ auch folgende Gleichung gilt: $$-\alpha_l^{V^{'}} + \alpha_k^{V^{'}} -\delta_a^{-^{'}} +\delta_a^{+^{'}} + \epsilon_a^{-^{'}} \hat{\Lambda}_a -  \epsilon_a^{+^{'}} \hat{\Lambda}_a $$ 
+            $$= \frac{1}{\Omega} \left(-\alpha_l^{V^{*}} + \alpha_k^{V^{*}} -\delta_a^{-^{*}} +\delta_a^{+^{*}} + \epsilon_a^{-^{*}} \hat{\Lambda}_a -  \epsilon_a^{+^{*}} \hat{\Lambda}_a\right) = 0, \forall a=(l,k) \in A: l \in V,~ k \in V,~ l \neq k$$ womit die ffduale Zulässigkeit von Gleichung (5.3) gezeigt ist.
+            
+            \item Gleichung (5.4) ist erfüllt, da mit $$\sum_{a \in \delta^{out}(u)} (\epsilon_a^{+^{*}} - \epsilon_a^{-^{*}}) -\sum_{a \in \delta^{in}(u)} (\epsilon_a^{+^{*}} - \epsilon_a^{-^{*}})  +\zeta_u^{+^{*}} -\zeta_u^{-^{*}} = 0$$ auch folgende Gleichung gilt: $$\sum_{a \in \delta^{out}(u)} (\epsilon_a^{+^{'}} - \epsilon_a^{-^{'}}) -\sum_{a \in \delta^{in}(u)} (\epsilon_a^{+^{'}} - \epsilon_a^{-^{'}})  +\zeta_u^{+^{'}} -\zeta_u^{-^{'}} $$
+            $$ = \dfrac{1}{\Omega} (\sum_{a \in \delta^{out}(u)} (\epsilon_a^{+^{*}} - \epsilon_a^{-^{*}}) -\sum_{a \in \delta^{in}(u)} (\epsilon_a^{+^{*}} - \epsilon_a^{-^{*}})  +\zeta_u^{+^{*}} -\zeta_u^{-^{*}})= 0 , \forall u \in V$$ womit die duale Zulässigkeit von Gleichung (5.4) gezeigt ist.
+        \end{itemize}
+
+    Damit ist gezeigt, dass wir in jedem Fall mit der besagten Wahl unserer neuen Dualvariablen die KKT-Bedingungen erfüllen.\\
+    Diese können wir nun wie folgt abschätzen:
+    \begin{enumerate}[start=0,label={zu (\arabic*)}]
+        \item \quad $\alpha^{'} = \dfrac{\alpha^*}{\Omega} \in [-1,1]^{|V|}$
+        \item \quad$\delta^{+^{'}} = \dfrac{\delta^{+^*}}{\Omega} \in [0,1]^{|A|}$
+        \item \quad$\delta^{-^{'}} = \dfrac{\delta^{-^*}}{\Omega} \in [0,1]^{|A|}$
+        \item \quad $\epsilon^{+^{'}} = \dfrac{\epsilon^{+^*}}{\Omega} \in [0,\max_{a \in A} \{\dfrac{1}{\hat{\Lambda}_a}\}]^{|A|}$
+        \item \quad$\epsilon^{-^{'}} = \dfrac{\epsilon^{-^*}}{\Omega} \in [0,\max_{a \in A} \{\dfrac{1}{\hat{\Lambda}_a}\}]^{|A|}$
+        \item \quad $\zeta_u^{+^{'}} \leq  \Big(|\delta^{out}(u)|+ |\delta^{in}(u)|\Big)\max_{a \in A} {_0\Delta_a^{\epsilon^+}} , ~\forall u \in V,$ nach Lemma (1.2).
+        \item \quad$\zeta^{-^{'}} \le \Big(|\delta^{out}(u)|+ |\delta^{in}(u)|\Big)\max_{a \in A} {_0\Delta_a^{\epsilon^+}}  , ~\forall u \in V,$ nach Lemma (1.2).
+        \item \quad$\eta^{+^{'}} = \alpha^V l \leq l$
+        \item \quad$\eta^{-^{'}} = -\alpha^V l \leq l$
+        \item \quad $\mu^{+^{'}} = -l -\alpha^V l \leq 2 l$
+        \item \quad$\mu^{-^{'}} = l + \alpha^V l \leq 2 l$
+    \end{enumerate}
+        % Somit ist die Duale Zulässigkeit durch (5.1) - (5.4) gegeben und es bleiben noch die restlichen KKT-Bedingungen zu erfüllen.
+        % \begin{align*}
+        % (5.5) &\quad \delta^{+^{'}}, \delta^{-^{'}}, \epsilon^{+^{'}}, \epsilon^{-^{'}}, \zeta^{+^{'}}, \zeta^{-^{'}}, \mu^{+^{'}}, \mu^{-^{'}}, \eta^{+^{'}}, \eta^{-^{'}} \geq 0 \\
+        % (5.6) &\quad \delta_a^{-^{'}} \big(q_a^*- (1-x_a)q_a^-\big) = 0, &&\forall a\in A \\
+        % (5.7) &\quad \delta_a^{+^{'}} \big((1-x_a)q_a^+ - q_a^*\big) = 0, &&\forall a \in A \\
+        % (5.8) &\quad \epsilon_a^{-^{'}} \big((\pi_l^* -\pi_k^* - \hat{\Lambda}_a q_a^*) - x_a M_a^-\big) = 0, &&\forall a=(l,k) \in A \\
+        % (5.9) &\quad \epsilon_a^{+^{'}} \big(x_a M_a^+ - (\pi_l^* -\pi_k^* - \hat{\Lambda}_a q_a^*)\big) = 0, &&\forall a=(l,k)\in A \\
+        % (5.10) &\quad \zeta_u^{-^{'}} (\pi_u^* - \pi_u^-) = 0, &&\forall u \in V \\
+        % (5.11) &\quad \zeta_u^{+^{'}} (\pi_u^+ - \pi_u^*) = 0, &&\forall u \in V \\
+        % (5.12) &\quad \mu_u^{-^{'}} \lambda_u^* = 0, &&\forall u \in V_- \\
+        % (5.13) &\quad \mu_u^{+^{'}} (1 - \lambda_u^*) = 0, &&\forall u \in V_- \\
+        % (5.14) &\quad \eta_u^{-^{'}} (\lambda_u^* - \lambda_u^-) = 0, &&\forall u \in V_+ \\
+        % (5.15) &\quad \eta_u^{+^{'}} (1 - \lambda_u^*) = 0, &&\forall u \in V_+ \\
+        % (5.16) &\quad \sum_{a \in \delta^{out}(u)} q_a^* - \sum_{a \in \delta^{in}(u)} q_a^* = (1-\lambda_u)l_u, &&\forall u \in V_+ \\
+        % (5.17) &\quad \sum_{a \in \delta^{out}(u)} q_a^* - \sum_{a \in \delta^{in}(u)} q_a^* = -(1-\lambda_u)l_u, &&\forall u \in V_- \\
+        % (5.18) &\quad \sum_{a \in \delta^{out}(u)} q_a^* - \sum_{a \in \delta^{in}(u)} q_a^* =0, &&\forall u \in V_0 := V \setminus (V_+ \cup V_-) \\
+        % (5.19) &\quad x_a M_a^- \leq \pi_l^* - \pi_k^* - \hat{\Lambda}_a q_a^* \leq x_a M_a^+ , &&\forall a=(l,k) \in A \\
+        % (5.20) &\quad \pi_u^- \leq \pi_u^* \leq \pi_u^+, &&\forall u \in V \\
+        % (5.21) &\quad \lambda_u^- \leq \lambda_u^* \leq 1, &&\forall u \in V_+\\
+        % (5.22) &\quad 0 \leq \lambda_u^* \leq 1, &&\forall u \in V_-\\
+        % (5.23) &\quad (1-x_a)q_a^- \leq q_a^* \leq (1-x_a)q_a^+, &&\forall a \in A\\
+        % \end{align*}
+        % (5.6) - (5.15) werden dabei erfüllt, da jede der beschränkten Dualvariablen zu den Gleichungsnebenbedingungen so definiert ist, dass sie genau dann 0 ist, wenn die ursprüngliche Dualvariable 0 ist.\\
+        % (5.5) wird bei komponentenweiser Betrachtung ebenfalls direkt nach Definition bzw. Schlussfolgerung erfüllt.\\
+        % (5.16) - (5.23) bleiben erfüllt, da die Primale Lösung insbesondere primal zulässig ist.\\
+        \end{proof}
+
+\end{theorem}
+
+   
+\newpage
+
+
+
+% \subsection{Aufstellen der Lagrange-Funktion des Lower-Level-Problems}
+% % The Lagrangian function for the lower level problem
+
+% \label{problem::Lower_Level_problem::Lagrangian}
+% \begin{align*}
+% &\mathcal{L}(\lambda, q, \pi, \alpha^{V}, \delta^+, \delta^-, \epsilon^+, \epsilon^-, \zeta^+, \zeta^-, \mu^+, \mu^-, \eta^+, \eta^-) \\
+% &= \sum_{u \in V_-} \lambda_u l_u \\
+% &- \sum_{v \in V_+} \alpha_v^{V} \left( \sum_{a \in \delta^{out}(v)} q_a - \sum_{a \in \delta^{in}(v)} q_a - (1 - \lambda_v) l_v \right) \\
+% &- \sum_{v \in V_-} \alpha_v^{V} \left( \sum_{a \in \delta^{out}(v)} q_a - \sum_{a \in \delta^{in}(v)} q_a + (1 - \lambda_v) l_v \right) \\
+% &- \sum_{v \in V_0} \alpha_v^{V} \left( \sum_{a \in \delta^{out}(v)} q_a - \sum_{a \in \delta^{in}(v)} q_a \right) \\
+% &- \sum_{a \in A} \delta_a^- \left( q_a - (1-x_a)q_a^- \right) - \sum_{a \in A} \delta_a^+ \left( (1-x_a)q_a^+ - q_a \right) \\
+% &- \sum_{a=(u,v) \in A} \epsilon_a^- \left( (\pi_u - \pi_v - \hat{\Lambda}_a q_a) - x_a M_a^- \right) \\
+% &- \sum_{a=(u,v) \in A} \epsilon_a^+ \left( x_a M_a^+ - (\pi_u - \pi_v - \hat{\Lambda}_a q_a) \right) \\
+% &- \sum_{u \in V} \zeta_u^+ (\pi_u^+ - \pi_u) - \sum_{u \in V} \zeta_u^- (\pi_u - \pi_u^-) \\
+% &- \sum_{u \in V_-} \mu_u^- \lambda_u - \sum_{u \in V_-} \mu_u^+ (1 - \lambda_u) \\
+% &- \sum_{u \in V_+} \eta_u^- (\lambda_u - \lambda_u^-) - \sum_{u \in V_+} \eta_u^+ (1 - \lambda_u)
+% \end{align*}
+% \newpage
+
+% \begin{proof}
+% Zunächst einmal stellen wir fest, dass für die Abschätzung lediglich die Variablen $x$ und $q$ relevant sind. Zudem reicht es aus, die Abschätzung komponentenweise durchzuführen. 
+% Das ergibt sich daraus, dass es ausreichend ist, sich die Gleichung (5.23) anzuschauen.
+% Daraus ergeben sich folgende Fälle:
+% \begin{enumerate}
+%     \item \begin{enumerate}
+%         \item $x_a = 0, q_a \in [q_a^-,q_a^+]:$
+%             $$q_a -q_a^- \geq \min{[q_a^-,q_a^+]}-q_a^-=q_a^- -q_a^- =0$$
+%             sowie: $$q_a-q_a^- \leq \max{[q_a^-,q_a^+]} -q_a^- =q_a^+-q_a^-$$
+%         \item $x_a = 1:$
+%             $$0=(1-1)q_a^- \leq q_a \leq (1-1)q_a^+= 0$$
+%             damit ist $q_a=0$ und damit $$q_a-(1-1)q_a^- = 0-0\geq 0.$$
+%     \end{enumerate}
+%     \item \begin{enumerate}
+%         \item $x_a = 0, q_a \in [q_a^-,q_a^+]:$
+%             $$q_a^+ -q_a\leq q_a^+-\min{[q_a^-,q_a^+]}=q_a^+ -q_a^-$$
+%             sowie: $$q_a^+ -q_a \geq q_a^+ -\max{[q_a^-,q_a^+]} =q_a^+-q_a^+ =0$$
+%         \item $x_a = 1:$
+%             $$0=(1-1)q_a^- \leq q_a \leq (1-1)q_a^+= 0$$
+%             damit ist $q_a=0$ und damit $$(1-1)q_a^+ -q_a = 0-0\geq 0.$$
+%     \end{enumerate}
+% \end{enumerate}
+% Aus 1. und 2. ergibt sich, was zu zeigen war.
+% \end{proof}
+% \end{lemma}
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_a^{\epsilon^-}$ und $~_1\Delta_a^{\epsilon^+}$]
+% Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% \begin{enumerate}
+%     \item $\forall a =(l,k) \in A: 0 \leq (\pi_l - \pi_k - \hat{\Lambda_a} q_a) - x_a M_a^- \leq ~_1\Delta_a^{\epsilon^-} = M_a^+ - M_a^- = \pi_l^+ - \pi_l^- + \pi_k^+ - \pi_k^-.$
+%     \item $\forall a = (l,k) \in A: 0 \leq x_a M_a^+ - (\pi_l - \pi_k - \hat{\Lambda_a} q_a) \leq ~_1\Delta_a^{\epsilon^+} = M_a^+ - M_a^- = \pi_l^+ - \pi_l^- + \pi_k^+ - \pi_k^-.$
+% \end{enumerate}
+% \begin{proof}
+%     Wir benötigen die Gleichung (5.19), um zu zeigen, dass 
+% $$0 \leq (\pi_l - \pi_k - \hat{\Lambda_a} q_a) - x_a M_a^- \leq ~_1\Delta_a^{\epsilon^-} = M_a^+ - M_a^-$$
+% gilt, für alle $a =(l,k) \in A$. 
+% $(1) x_a=0, q_a \in [q_a^-,q_a^+]:$
+% mit (5.19) folgt, dass $$\pi_l - \pi_k = \hat{\Lambda_a}q_a$$ und damit 
+% $$\pi_l - \pi_k - (\pi_l - \pi_k) - 0 \cdot M_a^- = 0 - 0 - 0 = 0 \geq 0.$$
+% $(2) x_a=1, q_a = 0: $ %siehe Beweis für x_a=1 folgt q_a = 0
+% mit (5.19) folgt: $$\pi_l - \pi_k - M_a^- \leq \max{[M_a^-,M_a^+]} - M_a^- = M_a^+ - M_a^-$$
+% sowie 
+% $$\pi_l - \pi_k - M_a^- \geq \min{[M_a^-,M_a^+]} - M_a^- = M_a^- - M_a^- = 0$$
+
+% und mit (5.20) folgt:
+% $$\pi_l - \pi_k \leq \max{[\pi_l^-,\pi_l^+]} - \min{[\pi_k^-,\pi_k^+]} = \pi_l^+ - \pi_k^-$$
+% sowie 
+% $$\pi_l - \pi_k \geq \min{[\pi_l^-,\pi_l^+]} - \max{[\pi_k^-,\pi_k^+]} = \pi_l^- - \pi_k^+.$$
+% Wähle nun $M_a^+ = \pi_l^+ - \pi_k^-$ und $M_a^- = \pi_l^- - \pi_k^+$  und man erhält, was zu zeigen war.
+% \end{proof}
+% \end{lemma}  
+% \newpage
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_a^{\epsilon^+}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $\forall a = (l,k) \in A: 0 \leq x_a M_a^+ - (\pi_l - \pi_k - \hat{\Lambda_a} q_a) \leq ~_1\Delta_a^{\epsilon^+} = M_a^+ - M_a^- = \pi_l^+ - \pi_l^- + \pi_k^+ - \pi_k^-.$
+%     \begin{proof}
+%         Wir benötigen die Gleichung (5.19), um zu zeigen, dass 
+% $$0 \leq x_a M_a^+ - (\pi_l - \pi_k - \hat{\Lambda_a} q_a) \leq ~_1\Delta_a^{\epsilon^+} = M_a^+ - M_a^-$$
+% gilt, für alle $a =(l,k) \in A$. 
+% $(1) x_a=0, q_a \in [q_a^-,q_a^+]:$
+% mit (5.19) folgt, dass $$\pi_l - \pi_k = \hat{\Lambda_a}q_a$$ und damit 
+% $$ 0 \cdot M_a^+ -(\pi_l - \pi_k - (\pi_l - \pi_k)) = 0 - 0 - 0 = 0 \geq 0.$$
+% $(2) x_a=1, q_a = 0: $ %siehe Beweis für x_a=1 folgt q_a = 0
+% mit (5.19) folgt: $$M_a^+ - (\pi_l - \pi_k) \leq M_a^+ - \min{[M_a^-,M_a^+]} = M_a^+ - M_a^-$$
+% sowie 
+% $$M_a^+ - (\pi_l - \pi_k) \geq M_a^+ - \max{[M_a^-,M_a^+]}= M_a^+ - M_a^+ = 0$$
+
+% und mit (5.20) folgt:
+% $$\pi_l - \pi_k \leq \max{[\pi_l^-,\pi_l^+]} - \min{[\pi_k^-,\pi_k^+]} = \pi_l^+ - \pi_k^-$$
+% sowie 
+% $$\pi_l - \pi_k \geq \min{[\pi_l^-,\pi_l^+]} - \max{[\pi_k^-,\pi_k^+]} = \pi_l^- - \pi_k^+.$$
+% Wähle nun $M_a^+ = \pi_l^+ - \pi_k^-$ und $M_a^- = \pi_l^- - \pi_k^+$  und man erhält, was zu zeigen war.
+%     \end{proof}
+% \end{lemma}
+% \newpage
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_u^{\zeta^-}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$\forall u \in V: 0 \leq \pi_u - \pi_u^-\leq ~_1\Delta_u^{\zeta^-} = \pi_u^+ - \pi_u^-.$$
+% \begin{proof}
+%     Wir benötigen die Gleichung (5.20) zum Beweisen dieser Abschätzung. Es besteht keine Abhängigkeit von irgendeiner anderen freien Variable als dem in einer Gleichung beschränkten $\pi_u$: 
+% (1): $0 \leq \pi_u - \pi_u^-:$
+% $$\pi_u - \pi_u^- \geq \min{[\pi_u^-,\pi_u^+]} - \pi_u^- = \pi_u^- - \pi_u^- = 0.$$
+% (2): $\pi_u - \pi_u^- \leq ~_1\Delta_u^{\zeta^-} = \pi_u^+ - \pi_u^-:$
+% $$\pi_u - \pi_u^- \leq \max{[\pi_u^-,\pi_u^+]} - \pi_u^- = \pi_u^+ - \pi_u^-.$$
+% Wähle nun noch $~_1\Delta_u^{\zeta^-}$ als $\pi_u^+ - \pi_u^-,$ um die Aussage zu beweisen.
+% \end{proof}
+% \end{lemma}
+% \newpage
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_u^{\zeta^+}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$\forall u \in V: 0 \leq \pi_u^+ - \pi_u\leq ~_1\Delta_u^{\zeta^+} = \pi_u^+ - \pi_u^-.$$
+% \begin{proof}
+%     Wir benötigen die Gleichung (5.20) zum Beweisen dieser Abschätzung. Es besteht keine Abhängigkeit von irgendeiner anderen freien Variable als dem in einer Gleichung beschränkten $\pi_u$: 
+% (1): $0 \leq \pi_u^+ - \pi_u$
+% $$\pi_u^+ - \pi_u \geq \pi_u^+ - \max{[\pi_u^-,\pi_u^+]} = \pi_u^+ - \pi_u^+ = 0.$$
+% (2): $\pi_u^+ - \pi_u \leq ~_1\Delta_u^{\zeta^+} = \pi_u^+ - \pi_u^-:$
+% $$\pi_u^+ - \pi_u \leq \pi_u^+ - \min{[\pi_u^-,\pi_u^+]} = \pi_u^+ - \pi_u^-.$$
+% Wähle nun noch $~_1\Delta_u^{\zeta^+}$ als $\pi_u^+ - \pi_u^-,$ um die Aussage zu beweisen.
+% \end{proof}
+% \end{lemma}
+% \newpage
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_u^{\mu^-}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$\forall u \in V_-: 0 \leq \lambda_u \leq ~_1\Delta_u^{\mu^-} = 1.$$
+% \begin{proof}
+%     Wir benötigen die Gleichung (5.21) zum Beweisen dieser Abschätzung. Es besteht keine Abhängigkeit von irgendeiner anderen freien Variable als dem in einer Gleichung beschränkten $\lambda_u$ für $u \in V_-$:
+% (1): $0 \leq \lambda_u:$
+% folgt direkt aus Gleichung (5.21).
+% (2): $\lambda_u \leq ~_1\Delta_u^{\mu^-} = 1:$
+% folgt direkt aus Gleichung (5.21).
+% Wähle nun noch $~_1\Delta_u^{\mu^-}$ als $1,$ um die Aussage zu beweisen.
+% \end{proof}
+% \end{lemma}
+% \newpage
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_u^{\mu^+}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$\forall u \in V_-: 0 \leq 1 - \lambda_u \leq ~_1\Delta_u^{\mu^+} = 1.$$
+% \begin{proof}
+%      Wir benötigen die Gleichung (5.21) zum Beweisen dieser Abschätzung. Es besteht keine Abhängigkeit von irgendeiner anderen freien Variable als dem in einer Gleichung beschränkten $\lambda_u$ für $u \in V_-$:
+% (1): $0 \leq 1 - \lambda_u:$
+% $$1 - \lambda_u \geq 1 - \max{[0,1]} = 1 - 1 = 0.$$
+% (2): $\lambda_u \leq ~_1\Delta_u^{\mu^+} = 1:$
+% $$1 - \lambda_u \leq 1 - \min{[0,1]} = 1 - 0 = 1.$$
+% Wähle nun noch $~_1\Delta_u^{\mu^+}$ als $1,$ um die Aussage zu beweisen.
+% \end{proof}
+% \end{lemma}
+% \newpage
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_u^{\eta^-}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$\forall u \in V_+: 0 \leq \lambda_u - \lambda_u^- \leq ~_1\Delta_u^{\eta^-} = 1 - \lambda_u^-.$$
+% \begin{proof}
+%     Wir benötigen die Gleichung (5.22) zum Beweisen dieser Abschätzung. Es besteht keine Abhängigkeit von irgendeiner anderen freien Variable als dem in einer Gleichung beschränkten $\lambda_u$ für $u \in V_+$:
+% (1): $0 \leq \lambda_u - \lambda_u^-:$
+% $$\lambda_u - \lambda_u^- \geq \min{[\lambda_u^-,1]} - \lambda_u^- = \lambda_u^- - \lambda_u^- = 0.$$
+% (2): $\lambda_u - \lambda^- \leq ~_1\Delta_u^{\eta^-} = 1 - \lambda_u^-:$
+% $$\lambda_u - \lambda_u^- \leq \max{[\lambda_u^-,1]} - \lambda_u^- = 1 - \lambda_u^-.$$
+% Wähle nun noch $~_1\Delta_u^{\eta^-}$ als $1 - \lambda_u^-,$ um die Aussage zu beweisen.
+% \end{proof}
+% \end{lemma}
+% \newpage
+
+% \begin{lemma}[Abschätzung für $~_1\Delta_u^{\eta^+}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$\forall u \in V_+: 0 \leq 1 - \lambda_u \leq ~_1\Delta_u^{\eta^+} = 1 - \lambda_u^-.$$
+% \begin{proof}
+%     Wir benötigen die Gleichung (5.22) zum Beweisen dieser Abschätzung. Es besteht keine Abhängigkeit von irgendeiner anderen freien Variable als dem in einer Gleichung beschränkten $\lambda_u$ für $u \in V_+$:
+% (1): $0 \leq 1 - \lambda_u:$
+% $$1 - \lambda_u \geq 1 - \max{[\lambda_u^-,1]} = 1 - 1 = 0.$$
+% (2): $1 - \lambda_u \leq ~_1\Delta_u^{\eta^+} = 1 - \lambda_u^-:$
+% $$1 - \lambda_u \leq 1 - \min{[\lambda_u^-,1]} = 1 - \lambda_u^-.$$
+% Wähle nun noch $~_1\Delta_u^{\eta^+}$ als $1 - \lambda_u^-,$ um die Aussage zu beweisen.
+% \end{proof}
+% \end{lemma}
+% \newpage
+
+% \subsection{Modulare Betrachtung der Gleichungen}
+% Wie bereits im Excel geschehen, habe ich die KKT-Bedingungen in Knoten-relevante und Kanten-relevante sowie die ersteren nochmals in einspeisende, neutrale und ausspeisende Gleichungen unterteilt. Dies ermöglicht eine unabhängigere Betrachtung und Schlussfolgerungen für die Variablen, die ich vorher bereits in diversen Unterfällen beobachten konnte, mir jetzt auf diesem Wege doch nochmal deutlich klarer geworden sind.
+% Nachfolgend habe ich diese Einteilung einmal aufgedröselt. Ob man hieraus auch in einzelne Minimierungsprobleme unterteilen könnte, kann ich aktuell noch nicht sagen. 
+
+% \subsubsection{Knoten/Kanten-basierte Aufteilung der Gleichungen}
+% \paragraph{Modul:Intakte Kante $a$ ($M_{\text{Intakt}}(a=(u,v))$)}
+% \begin{align*}
+%     (5.3) &-\alpha_u^{V} + \alpha_v^{V} -\delta_a^- +\delta_a^+ + \epsilon_a^- \hat{\Lambda}_a -  \epsilon_a^+ \hat{\Lambda}_a=0, &&u \neq v \\
+%     (5.5) &\delta_a^+, \delta_a^-, \epsilon_a^+, \epsilon_a^- \geq 0 \\
+%     (5.6) &\delta_a^- \Big(q_a - q_a^-\Big) = 0\\
+%     (5.7) &\delta_a^+ \Big(q_a^+ - q_a\Big) = 0\\
+%     (5.19) &\pi_u - \pi_v = \hat{\Lambda}_a q_a\\
+%     (5.23) &q_a^- \leq q_a \leq q_a^+, &&q_a^- < q_a^+ (\textit{s. Paper Thürauf/Schmidt})\\
+% \end{align*}
+% \subparagraph{Folgerungen}
+% Im Fall der intakten Kante, kann man in drei Fälle unterteilen, die in der Variation von $q_a$ auch den Ausprägungen im Excel entsprechen.\\
+% Dabei erkennt man, dass die Gleichungen (5.6) und (5.7) lediglich den Zusammenhang zwischen der Ausprägung und den von Null verschiedenen Dualvariablen wiedergeben. (5.19) und (5.23) sowie (5.5) sind ebenfalls zu berücksichtigen, jedoch nicht von besonderer Prominenz, da sie lediglich Schranken angeben.\\
+% Daher wird nur Gleichung (5.3) aufgeführt als Ergebnis von offensichtlichen Folgerungen für die nicht aufgeführten Variablen aus den Komplementaritätsbedingungen und Beschränkungen.\\
+% \begin{enumerate}
+%     \item $q_a = q_a^-:$\\
+%     $$-\alpha_u^{V} + \alpha_v^{V} -\delta_a^- + \epsilon_a^- \hat{\Lambda}_a - \epsilon_a^+ \hat{\Lambda}_a=0$$
+
+%     \item $q_a \in (q_a^-,q_a^+):$
+%     $$-\alpha_u^{V} + \alpha_v^{V} + \epsilon_a^- \hat{\Lambda}_a - \epsilon_a^+ \hat{\Lambda}_a=0$$
+%     \item $q_a = q_a^+:$
+%     $$-\alpha_u^{V} + \alpha_v^{V} +\delta_a^+ + \epsilon_a^- \hat{\Lambda}_a - \epsilon_a^+ \hat{\Lambda}_a=0$$
+% \end{enumerate}
+% \newpage
+
+% \paragraph{Modul: Ausfall Kante $a$ ($M_{\text{Ausfall}}(a=(u,v))$)}
+% \begin{align*}
+%     (5.3) &-\alpha_l^{V} + \alpha_k^{V} -\delta_a^- +\delta_a^+ + \epsilon_a^- \hat{\Lambda}_a -  \epsilon_a^+ \hat{\Lambda}_a=0, && u \neq v \\
+%     (5.5) &\delta_a^+, \delta_a^-, \epsilon_a^+, \epsilon_a^- \geq 0 \\
+%     (5.8) &\epsilon_a^- \Big((\pi_u -\pi_v) - M_a^-\Big) = 0\\
+%     (5.9) &\epsilon_a^+ \Big(M_a^+ - (\pi_u -\pi_v)\Big) = 0\\
+%     (5.19) &M_a^- \leq \pi_u - \pi_v \leq M_a^+\\
+%     (5.23) &q_a = 0\\
+% \end{align*}
+% \subparagraph{Folgerungen}
+% Im Fall der ausgefallenen Kante, kann man in drei Fälle unterteilen, die in der Variation von $\pi_u - \pi_v$ auch den Ausprägungen im Excel entsprechen.\\
+% Dabei erkennt man, dass die Gleichungen (5.8) und (5.9) lediglich den Zusammenhang zwischen der Ausprägung und den von Null verschiedenen Dualvariablen wiedergeben. (5.19) und (5.23) sowie (5.5) sind ebenfalls zu berücksichtigen, jedoch nicht von besonderer Prominenz, da sie lediglich Schranken angeben.\\
+% Daher wird nur Gleichung (5.3) aufgeführt als Ergebnis von offensichtlichen Folgerungen für die nicht aufgeführten Variablen aus den Komplementaritätsbedingungen und Beschränkungen.\\
+% \begin{enumerate}
+%     \item $\pi_u - \pi_v = M_a^-:$
+%     $$-\alpha_u^{V} + \alpha_v^{V} -\delta_a^- +\delta_a^+ + \epsilon_a^- \hat{\Lambda}_a =0$$
+%     \item $\pi_u - \pi_v \in (M_a^-,M_a^+):$
+%     $$-\alpha_u^{V} + \alpha_v^{V} -\delta_a^- +\delta_a^+=0$$
+%     \item $\pi_u - \pi_v = M_a^+:$
+%     $$-\alpha_u^{V} + \alpha_v^{V} -\delta_a^- +\delta_a^+ \epsilon_a^+ \hat{\Lambda}_a=0$$
+% \end{enumerate}
+% \newpage
+
+% \paragraph{Modul: Jeder Knoten $u$ ($M_V(u)$)}
+% \begin{align*}
+%     (5.4) &\sum_{z \in \delta^{out}(u)} (\epsilon_z^+ - \epsilon_z^-) -\sum_{z \in \delta^{in}(u)} (\epsilon_z^+ - \epsilon_z^-)  +\zeta_u^+ -\zeta_u^- = 0\\
+%     (5.5) &\epsilon_z^+, \epsilon_z^-, \zeta_u^+, \zeta_u^- \geq 0, &&\forall z \in \delta^{out}(u) \cup \delta^{in}(u) \\
+%     (5.10) &\zeta_u^- (\pi_u - \pi_u^-) = 0 \\
+%     (5.11) &\zeta_u^+ (\pi_u^+ - \pi_u) = 0 \\
+%     (5.20) &\pi_u^- \leq \pi_u \leq \pi_u^+\\
+% \end{align*}
+% \subparagraph{Folgerungen}
+% Im Fall eines jeden Knotens, kann man in drei Fälle unterteilen, die in der Variation von $\pi_u$ auch den Ausprägungen im Excel entsprechen.\\
+% Dabei erkennt man, dass die Gleichungen (5.10) und (5.11) lediglich den Zusammenhang zwischen der Ausprägung und den von Null verschiedenen Dualvariablen wiedergeben. (5.20) sowie (5.5) sind ebenfalls zu berücksichtigen, jedoch nicht von besonderer Prominenz, da sie lediglich Schranken angeben.\\
+% Daher wird nur Gleichung (5.4) aufgeführt als Ergebnis von offensichtlichen Folgerungen für die nicht aufgeführten Variablen aus den Komplementaritätsbedingungen und Beschränkungen.\\
+% \begin{enumerate}
+%     \item $\pi_u = \pi_u^-:$
+%     $$\sum_{z \in \delta^{out}(u)} (\epsilon_z^+ - \epsilon_z^-) -\sum_{z \in \delta^{in}(u)} (\epsilon_z^+ - \epsilon_z^-) -\zeta_u^- = 0$$
+%     \item $\pi_u \in (\pi_u^-,\pi_u^+):$
+%     $$\sum_{z \in \delta^{out}(u)} (\epsilon_z^+ - \epsilon_z^-) -\sum_{z \in \delta^{in}(u)} (\epsilon_z^+ - \epsilon_z^-) = 0$$
+%     \item $\pi_u = \pi_u^+:$
+%     $$\sum_{z \in \delta^{out}(u)} (\epsilon_z^+ - \epsilon_z^-) -\sum_{z \in \delta^{in}(u)} (\epsilon_z^+ - \epsilon_z^-)  +\zeta_u^+ = 0$$
+% \end{enumerate}
+% \newpage
+
+% \paragraph{Modul: Neutraler Knoten $u$ ($M_{V_0}(u)$)}
+% \begin{align*}
+%     (5.18) &\sum_{z \in \delta^{out}(u)} q_z - \sum_{z \in \delta^{in}(u)} q_z =0\\
+%     (5.23) &(1-x_z)q_z^- \leq q_z \leq (1-x_z)q_z^+, &&\forall z \in \delta^{out}(u) \cup \delta^{in}(u) \\ 
+% \end{align*}
+% \subparagraph{Folgerungen}
+% Im Fall des neutralen Knoten kann man keinerlei Fälle analog zu den anderen Ausprägungen unterscheiden.\\
+% In diesem Fall ergeben sich keinerlei besondere Erkenntnisse aus (5.18) und (5.23).\\
+% \newpage
+
+% \paragraph{Modul: Einspeisender Knoten $u$ ($M_{V_+}(u)$)}
+% \begin{align*}
+%     (5.1) &-\alpha_u^{V} l_u - \eta_u^- +\eta_u^+ = 0 \\
+%     (5.5) &\eta_u^+, \eta_u^-, l_u \geq 0 \\
+%     (5.14) &\eta_u^- (\lambda_u - \lambda_u^-) = 0 \\
+%     (5.15) &\eta_u^+ (1 - \lambda_u) = 0 \\
+%     (5.16) &\sum_{z \in \delta^{out}(u)} q_z - \sum_{z \in \delta^{in}(u)} q_z = (1-\lambda_u)l_u \\
+%     (5.21) &\lambda_u^- \leq \lambda_u \leq 1\\
+%     (5.23) &(1-x_z)q_z^- \leq q_z \leq (1-x_z)q_z^+, &&\forall z \in \delta^{out}(u) \cup \delta^{in}(u) \\ 
+% \end{align*}
+% \subparagraph{Folgerungen}
+% Im Fall des einspeisenden Knotne, kann man zusätzlich in drei Fälle unterteilen, die in der Variation von $\lambda_u$ auch den Ausprägungen im Excel entsprechen.\\
+% Dabei erkennt man, dass die Gleichungen (5.14) und (5.15) lediglich den Zusammenhang zwischen der Ausprägung und den von Null verschiedenen Dualvariablen wiedergeben. (5.21) und (5.23) sowie (5.5) sind ebenfalls zu berücksichtigen, jedoch nicht von besonderer Prominenz, da sie lediglich Schranken angeben.\\
+% Daher wird nur Gleichung (5.1) aufgeführt als Ergebnis von offensichtlichen Folgerungen für die nicht aufgeführten Variablen aus den Komplementaritätsbedingungen und Beschränkungen.\\
+% \begin{enumerate}
+%     \item $\lambda_u = \lambda_u^-:$
+%     $$-\alpha_u^{V} l_u - \eta_u^- = 0$$
+%     $$\Longleftrightarrow~~\alpha_u^V = -\dfrac{\eta_u^-}{l_u}$$
+%     \item $\lambda_u \in (\lambda_u^-,\lambda_u^+):$
+%     $$-\alpha_u^{V} l_u = 0$$
+%     $$\Longleftrightarrow~~\alpha_u^V = 0$$
+%     \item $\lambda_u = \lambda_u^+:$
+%     $$-\alpha_u^{V} l_u +\eta_u^+ = 0$$
+%     $$\Longleftrightarrow~~\alpha_u^V = \dfrac{\eta_u^+}{l_u}$$
+% \end{enumerate}
+% \newpage
+
+% \paragraph{Modul: Ausspeisender Knoten $u$ ($M_{V_-}(u)$)}
+% \begin{align*}
+%     (5.2) &l_u + \alpha_u^{V} l_u  - \mu_u^- + \mu_u^+ = 0 \\
+%     (5.5) & \mu_u^+, \mu_u^-, l_u \geq 0 \\
+%     (5.12) &\mu_u^- \lambda_u = 0\\
+%     (5.13) &\mu_u^+ (1 - \lambda_u) = 0\\
+%     (5.17) &\sum_{z \in \delta^{out}(u)} q_z - \sum_{z \in \delta^{in}(u)} q_z = -(1-\lambda_u)l_u\\
+%     (5.22) &0 \leq \lambda_u \leq 1\\
+%     (5.23) &(1-x_z)q_z^- \leq q_z \leq (1-x_z)q_z^+, &&\forall z \in \delta^{out}(u) \cup \delta^{in}(u) \\ 
+% \end{align*}
+% \subparagraph{Folgerungen}
+% Im Fall des ausspeisenden Knotens, kann man zusätzlich in drei Fälle unterteilen, die in der Variation von $\lambda_u$ auch den Ausprägungen im Excel entsprechen.\\
+% Dabei erkennt man, dass die Gleichungen (5.12) und (5.13) lediglich den Zusammenhang zwischen der Ausprägung und den von Null verschiedenen Dualvariablen wiedergeben. (5.22) und (5.23) sowie (5.5) sind ebenfalls zu berücksichtigen, jedoch nicht von besonderer Prominenz, da sie lediglich Schranken angeben.\\
+% Daher wird nur Gleichung (5.2) aufgeführt als Ergebnis von offensichtlichen Folgerungen für die nicht aufgeführten Variablen aus den Komplementaritätsbedingungen und Beschränkungen.\\
+% \begin{enumerate}
+%     \item $\lambda_u = 0:$
+%     $$l_u + \alpha_u^{V} l_u - \mu_u^- = 0$$
+%     $$\Longleftrightarrow~~\alpha_u^V = \dfrac{\mu_u^-}{l_u} - 1$$
+%     \item $\lambda_u \in (0,\lambda_u^+):$
+%     $$l_u + \alpha_u^{V} l_u = 0$$
+%     $$\Longleftrightarrow~~\alpha_u^V = - 1$$
+%     \item $\lambda_u = \lambda_u^+:$
+%     $$l_u + \alpha_u^{V} l_u + \mu_u^+ = 0$$
+%     $$\Longleftrightarrow~~\alpha_u^V = -\dfrac{\mu_u^+}{l_u} - 1$$
+% \end{enumerate}
+% \newpage
+
+
+% Allgemein kam ich bisher immer zu dem Punkt - ohne meine umfassende, erste Excel-Analyse abgeschlossen zu haben - dass man doch eher in ein Verhältnis hineinläuft zwischen zwei Dualvariablen. So könnte man dann sagen: "Wenn ich eine Schranke für x habe, habe ich auch eine für y." Dies bringt aber keine direkte Schranke hervor.
+% \subsubsection{Algorithmus zur Gewinnung einer Schranke}
+% Mit Hilfe eines Algorithmus kann man über die Verhältnisse für jede Schranke nach dem größten Wert für diese Dualvariable innerhalb des Graphen suchen und diesen als maximalen Wert für diese angeben. Das Problem, dass sich hierbei ergibt, besteht in den drei Fällen, in denen ich das anwenden wollte darin, dass man dann immer noch keinen Fortschritt hat, da man nur wüsste, wo man "zuerst" Optimieren müsste, um eine Schranke für den Rest des Netzes zu erhalten. Da man das aber - nach meinem Verständnis - in Potentialgetriebenen Netzwerken nicht ohne weiteres machen kann, ist mir hier auch nur bedingt der Nutzen klar. Falls der eine Knoten eine Schranke für die Dualvariable besitzt, ist alles beschränkt, falls nicht, kann man keine Aussage treffen.
+
+% \begin{lemma}
+% (Abschätzung für $~_0\Delta_u^{\zeta^+}$): Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$0\leq\zeta^-_u\leq ~_0\Delta_u^{\zeta^+}z_u^{\zeta^+} = \sum_{a\in\delta^{in}(u)}\dfrac{1}{{\hat{\Lambda}}_a}$$
+% \begin{proof}
+%     Wir benötigen die Gleichungen (5.3) und (5.4) zum Beweisen dieser Abschätzung. Der Grundgedanke hierbei ist es, Variablen zu eliminieren und abzuschätzen. 
+% Aus (5.3) folgt mit $q_a\in (q_a^-,q_a^+)$ und (5.6) sowie (5.7), dass
+% $$-\alpha_l^V+\alpha_k^V + (\epsilon_a^- - \epsilon^+_a) \hat{\Lambda}_a = 0.$$
+% Daraus ergibt sich
+% $$\dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} = \epsilon_a^+ - \epsilon_a^-$$
+% und daraus wiederum, wenn man in (5.4) mit $\pi_u = \pi_u^-$ einsetzt
+% $$\sum_{a\in\delta^{out}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} - \sum_{a\in\delta^{in}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} = - \zeta_u^+.$$
+% Ohne Beschränkung der Allgemeinheit (o.B.d.A.) darf man nun annehmen, dass $\alpha^V_k - \alpha_l^V\in [0,1].$ Dies gelingt über passende Skalierung von (5.3).
+% Damit ergibt sich, dass 
+% $$\zeta_u^+ = \sum_{a\in\delta^{in}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} - \sum_{a\in\delta^{out}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} \leq  \sum_{a\in\delta^{in}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} \leq \sum_{a\in\delta^{in}(u)} \dfrac{1}{\hat{\Lambda}_a}.$$
+% Wähle nun noch $~_0\Delta_u^{\zeta^+}z_u^{\zeta^+} = \sum_{a\in\delta^{in}(u)}\frac{1}{{\hat{\Lambda}}_a}.$
+% \end{proof}
+% \end{lemma}
+%\begin{align*}
+%     &\text{Wähle}~\delta_a^{-^{'}} = \frac{\delta_a^{-^*}}{\text{MAX}} ~\text{mit}~\delta_a^{-^*} \in [0,\infty): 
+%     &\delta_a^{-^{'}} \in [0,1],&&\forall a \in A\\
+%     &\text{zu (ii):} &\text{Wähle}~\delta_a^{+^{'}} &= \frac{\delta_a^{+^*}}{\text{MAX}}, &&\forall a \in A\\
+%     &&\text{mit}~\delta_a^{+^*} \in [0,\infty): &\delta_a^{+^{'}} \in [0,1]\\
+%     &\text{zu (iii):} \\
+%     &&\text{Wähle}~\epsilon_a^{-^{'}} \hat{\Lambda}_a &= \frac{\epsilon_a^{-^*} \hat{\Lambda}_a}{\text{MAX}}, &\forall a \in A\\
+%     &&\text{mit}~\epsilon_a^{-^*} \hat{\Lambda}_a \in [0,\infty): &\epsilon_a^{-^{'}} \in [0,1]\\
+%     &&\text{Wähle}~\epsilon_a^{-^{'}} &= \frac{\epsilon_a^{-^*}}{\text{MAX}}, &\forall a \in A\\
+%     &&\text{mit}~\epsilon_a^{-^*} \hat{\Lambda}_a \in [0,\infty): &\epsilon_a^{-^{'}} \hat{\Lambda}_a \in [0,1]\\
+%     &\text{zu (iv):} \\
+%     &&\text{Wähle}~\epsilon_a^{+^{'}} \hat{\Lambda}_a &= \frac{\epsilon_a^{+^*} \hat{\Lambda}_a}{\text{MAX}}, &\forall a \in A\\
+%     &&\text{mit}~\epsilon_a^{+^*} \in [0,\infty): &\epsilon_a^{+^{'}} \in [0,1]\\
+%     &&\text{Wähle}~\epsilon_a^{+^{'}} &= \frac{\epsilon_a^{+^*}}{\text{MAX}}, &\forall a \in A\\
+%     &&\text{mit}~\epsilon_a^{+^*} \in [0,\infty): &\epsilon_a^{+^{'}} \in [0,1]\\
+%     &\text{zu (v):} &\text{Wähle}~\zeta_u^{-^{'}} &= \frac{\zeta_u^{-^*}}{\text{MAX}}, &\forall u \in V\\
+%     &&\text{mit}~\zeta_u^{-^*} \in [0,\infty): &\zeta_u^{-^{'}} \in [0,1]\\
+%     &\text{zu (vi):} &\text{Wähle}~\zeta_u^{+^{'}} &= \frac{\zeta_u^{+^*}}{\text{MAX}}, &\forall u \in V\\
+%     &&\text{mit}~\zeta_u^{+^*} \in [0,\infty): &\zeta_u^{+^{'}} \in [0,1]\\
+%     &\text{zu (vii):} &\text{Wähle}~\mu_u^{-^{'}} &= \frac{\mu_u^{-^*}}{\text{MAX}}, &\forall u \in V_-\\
+%     &&\text{mit}~\mu_u^{-^*} \in [0,\infty): &\mu_u^{-^{'}} \in [0,1]\\
+%     &\text{zu (viii):} &\text{Wähle}~\mu_u^{+^{'}} &= \frac{\mu_u^{+^*}}{\text{MAX}}, &\forall u \in V_-\\
+%     &&\text{mit}~\mu_u^{+^*} \in [0,\infty): &\mu_u^{+^{'}} \in [0,1]\\
+%     &\text{zu (ix):} &\text{Wähle}~\eta_u^{-^{'}} &= \frac{\eta_u^{-^*}}{\text{MAX}}, &\forall u \in V_+\\
+%     &&\text{mit}~\eta_u^{-^*} \in [0,\infty): &\eta_u^{-^{'}} \in [0,1]\\
+%     &\text{zu (x):} &\text{Wähle}~\eta_u^{+^{'}} &= \frac{\eta_u^{+^*}}{\text{MAX}}, &\forall u \in V_+\\
+%     &&\text{mit}~\eta_u^{+^*} \in [0,\infty): &\eta_u^{+^{'}} \in [0,1]\\
+%     &\text{zu (xi):} \\
+%     &&\text{Wähle}~\alpha_u'l_u &= \frac{\alpha_u^*l_u}{\text{MAX}}, &\forall u \in V_+\\
+%     &&\text{mit}~\alpha_u^*l_u \in (-\infty,\infty): &\alpha_u'l_u \in [-1,1]\\
+%     &&\text{Wähle}~(1 + \alpha_u')l_u &= \frac{(1 + \alpha_u^*)l_u}{\text{MAX}}, &\forall u \in V_-\\
+%     &&\text{mit}~(1 + \alpha_u^*)l_u \in (-\infty,\infty): &(1 + \alpha_u')l_u \in [-1,1]\\
+%     &&\text{Wähle}~\alpha_u' &= \frac{\alpha_u^*}{\text{MAX}}, &\forall u \in V\\
+%     &&\text{mit}~\alpha_u^* \in (-\infty,\infty): &\alpha_u' \in [-1,1]\\
+% \end{align*}
+
+% \begin{lemma}[Abschätzung für $~_0\Delta_u^{\zeta^-}$] Seien die KKT-Bedingungen zur Linearisierung von System (4) gegeben durch (5). Dann gilt für jeden Punkt $(q,x,\pi,\lambda)$, der die KKT-Bedingungen erfüllt, folgende Abschätzung:
+% $$0\leq\zeta^-_u\leq ~_0\Delta_u^{\zeta^-}z_u^{\zeta^-} = \sum_{a\in\delta^{out}(u)}\dfrac{1}{{\hat{\Lambda}}_a}$$
+% \begin{proof}
+%     Wir benötigen die Gleichungen (5.3) und (5.4) zum Beweisen dieser Abschätzung. Der Grundgedanke hierbei ist es, Variablen zu eliminieren und abzuschätzen. 
+% Aus (5.3) folgt mit $q_a\in (q_a^-,q_a^+)$ und (5.6) sowie (5.7), dass
+% $$-\alpha_l^V+\alpha_k^V + (\epsilon_a^- - \epsilon^+_a) \hat{\Lambda}_a = 0.$$
+% Daraus ergibt sich
+% $$\dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} = \epsilon_a^+ - \epsilon_a^-$$
+% und daraus wiederum, wenn man in (5.4) mit $\pi_u = \pi_u^-$ einsetzt
+% $$\sum_{a\in\delta^{out}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} - \sum_{a\in\delta^{in}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} = \zeta_u^-.$$
+% Ohne Beschränkung der Allgemeinheit (o.B.d.A.) darf man nun annehmen, dass $\alpha^V_k - \alpha_l^V\in [0,1].$ Dies gelingt über passende Skalierung von (5.3).
+% Damit ergibt sich, dass 
+% $$\zeta_u^- = \sum_{a\in\delta^{out}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} - \sum_{a\in\delta^{in}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} \leq  \sum_{a\in\delta^{out}(u)} \dfrac{\alpha^V_k - \alpha_l^V}{\hat{\Lambda}_a} \leq \sum_{a\in\delta^{out}(u)} \dfrac{1}{\hat{\Lambda}_a}.$$
+% Wähle nun noch $~_0\Delta_u^{\zeta^-}z_u^{\zeta^-} = \sum_{a\in\delta^{out}(u)}\frac{1}{{\hat{\Lambda}}_a}.$
+% \end{proof}
+% \end{lemma}
+% \newpage

@@ -250,10 +250,15 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
         }
         nx.draw_networkx_edge_labels(interdicted_network, pos, edge_labels=edge_labels, font_size=8)
 
-        #TODO: Insert different folders to insert the plots into
-        plt.savefig("./myfile.pdf", format='pdf')
+
+        path_to_PLOT = f'./logs/{mode}/PLOT/'
+        os.makedirs(path_to_PLOT, exist_ok=True)
         
-        plt.show()
+        plt.savefig(os.path.join(path_to_PLOT, f'intBudget_{Budget}_instance_{scenarioname}.png'), dpi=600, bbox_inches='tight', format='png')
+        plt.savefig(os.path.join(path_to_PLOT, f'intBudget_{Budget}_instance_{scenarioname}.pdf'), dpi=600, bbox_inches='tight', format='pdf')
+        plt.savefig(os.path.join(path_to_PLOT, f'intBudget_{Budget}_instance_{scenarioname}.svg'), dpi=600, bbox_inches='tight', format='svg')
+        
+        #plt.show()
 
 
     plot_solution(network, f'./logs/{mode}/SOL/intBudget_{Budget}_instance_{scenarioname}.sol', optimal_interdiction_decision, False, True)
@@ -264,12 +269,13 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
 p = multiprocessing.Process(target=run_method, args=(mode, pyomoData, scenarioname, Budget))
 p.start()
 
-# Wait for 3600 seconds (1 hour)
-p.join(timeout=3600)
+timelimit=10800
+# Wait for timelimit seconds (6 hours)
+p.join(timeout=timelimit)
 
 # Terminate the process if it's still running
 if p.is_alive():
     p.terminate()
-    print("Method execution timed out after 3600 seconds.")
+    print(f"Method execution timed out after {timelimit} seconds.")
 else:
-    print("Method executed successfully within 3600 seconds.")
+    print(f"Method executed successfully within {timelimit} seconds.")

@@ -20,16 +20,13 @@ class Single_Level_Formulation_Model:
         self.m = Model(f"{networkInstanceName}")
 
         # General Model Parameters
-        self.m.setParam("TimeLimit", 3600)  # Set a time limit for the optimization
+        self.m.setParam("TimeLimit", 10800)  # Set a time limit for the optimization
         self.m.setParam("OutputFlag", 1)  # Suppress Gurobi output
         self.m.setParam("LogToConsole", 1)
         
         # Data conversion into Model
         self.nodes_list = data["nodes"][None]  # List of nodes
         self.arcs_list = data["arcs"][None]  # List of arcs
-        print(self.arcs_list)
-        # Filter for duplicate arcs (erase duplicate arcs)
-        #self.arcs_list = list(set(data["arcs"][None]))
         
         self.interdictionBudget_int = budget  # Budget for interdiction
         self.activeElements_list = data["activeElements"][
@@ -72,6 +69,9 @@ class Single_Level_Formulation_Model:
             "LB": data["massflowLb"],  # Lower bounds of mass flow at arcs
             "UB": data["massflowUb"],  # Upper bounds of mass flow at arcs
         }
+        self.handle_duplicates(self.massflowBounds_at_arcs_dict_dict["LB"], True, False)
+        self.handle_duplicates(self.massflowBounds_at_arcs_dict_dict["UB"], True, False)
+        
         self.loadflow_at_nodes_dict = {
             **data["loadflow"],
             **{node: 0.0 for node in self.inner_nodes_list},
@@ -79,6 +79,8 @@ class Single_Level_Formulation_Model:
         self.pressureLossFactor_at_arcs_dict = data[
             "pressureLossFactor"
         ]  # Pressure loss factor at arcs
+        self.handle_duplicates(self.pressureLossFactor_at_arcs_dict, True, True)
+        
         self.WCloadflow_at_nodes_dict = data[
             "weaklyConnectedLoadflow"
         ]  # Weakly connected load flow at nodes
@@ -115,6 +117,37 @@ class Single_Level_Formulation_Model:
         if "out" == in_or_out.lower():
             return [arc for arc in self.arcs_list if arc[0] == node]
         return []
+
+    def handle_duplicates(self, values_dict, addDuplicates, erazeDuplicatesFromArcsList):
+        # Create a new dictionary to store the results
+        result_dict = {}
+        
+        # Create a new list to store unique keys
+        unique_arcs_list = []
+        
+        # Iterate over the keys in self.arcs_list
+        for key in self.arcs_list:
+            if key in values_dict:
+                if key in result_dict:
+                    if addDuplicates:
+                        # If addDuplicates is True, sum the values
+                        result_dict[key] += values_dict[key]
+                else:
+                    # Add the key-value pair to the result dictionary
+                    result_dict[key] = values_dict[key]
+                    # Add the key to the unique list
+                    unique_arcs_list.append(key)
+        
+        # Remove duplicates from values_dict
+        for key in list(values_dict.keys()):
+            if key in result_dict:
+                del values_dict[key]
+        
+        # Update the original dictionary with the result dictionary
+        values_dict.update(result_dict)
+        if erazeDuplicatesFromArcsList:
+            # Update self.arcs_list to be unique
+            self.arcs_list = unique_arcs_list
 
 
     def add_WCcheck_constraints(self):
