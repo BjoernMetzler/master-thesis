@@ -424,29 +424,29 @@ class Single_Level_Formulation_Model:
         self.m.addSOS(GRB.SOS_TYPE1, [self.dual_PDAI_var_at_arcs_upper[arc], (self.interdiction_var_at_arcs[arc] * (self.pressureBounds_at_nodes_dict_dict["UB"][arc[0]] - self.pressureBounds_at_nodes_dict_dict["LB"][arc[1]])) - (self.pressure_var_at_nodes[arc[0]] - self.pressure_var_at_nodes[arc[1]] - self.pressureLossFactor_at_arcs_dict[arc] * self.flow_var_at_arcs[arc])])"""
         # replaced by
         # Create auxiliary variables
-        aux_vars_lower = self.m.addVars(self.arcs_list,name=f"aux_var_lower")
-        aux_vars_upper = self.m.addVars(self.arcs_list,name=f"aux_var_upper")
-        aux_vars_pdai_lower = self.m.addVars(self.arcs_list,name=f"aux_var_pdai_lower")
-        aux_vars_pdai_upper = self.m.addVars(self.arcs_list,name=f"aux_var_pdai_upper")
+        self.aux_vars_lower = self.m.addVars(self.arcs_list,name=f"aux_var_lower")
+        self.aux_vars_upper = self.m.addVars(self.arcs_list,name=f"aux_var_upper")
+        self.aux_vars_pdai_lower = self.m.addVars(self.arcs_list,name=f"aux_var_pdai_lower")
+        self.aux_vars_pdai_upper = self.m.addVars(self.arcs_list,name=f"aux_var_pdai_upper")
 
         # Add constraints to define the auxiliary variables
         for arc in self.arcs_list:
             self.m.addConstr(
-                aux_vars_lower[arc]
+                self.aux_vars_lower[arc]
                 == self.flow_var_at_arcs[arc]
                 - (1.0 - self.interdiction_var_at_arcs[arc])
                 * self.massflowBounds_at_arcs_dict_dict["LB"][arc],
                 name=f"aux_constr_lower_{arc}",
             )
             self.m.addConstr(
-                aux_vars_upper[arc]
+                self.aux_vars_upper[arc]
                 == (1.0 - self.interdiction_var_at_arcs[arc])
                 * self.massflowBounds_at_arcs_dict_dict["UB"][arc]
                 - self.flow_var_at_arcs[arc],
                 name=f"aux_constr_upper_{arc}",
             )
             self.m.addConstr(
-                aux_vars_pdai_lower[arc]
+                self.aux_vars_pdai_lower[arc]
                 == (
                     self.pressure_var_at_nodes[arc[0]]
                     - self.pressure_var_at_nodes[arc[1]]
@@ -462,7 +462,7 @@ class Single_Level_Formulation_Model:
                 name=f"aux_constr_pdai_lower_{arc}",
             )
             self.m.addConstr(
-                aux_vars_pdai_upper[arc]
+                self.aux_vars_pdai_upper[arc]
                 == (
                     self.interdiction_var_at_arcs[arc]
                     * (
@@ -481,18 +481,18 @@ class Single_Level_Formulation_Model:
         # Add SOS1 constraints using the auxiliary variables
         for arc in self.arcs_list:
             self.m.addSOS(
-                GRB.SOS_TYPE1, [self.dual_flow_var_at_arcs_lower[arc], aux_vars_lower[arc]]
+                GRB.SOS_TYPE1, [self.dual_flow_var_at_arcs_lower[arc], self.aux_vars_lower[arc]]
             )
             self.m.addSOS(
-                GRB.SOS_TYPE1, [self.dual_flow_var_at_arcs_upper[arc], aux_vars_upper[arc]]
-            )
-            self.m.addSOS(
-                GRB.SOS_TYPE1,
-                [self.dual_PDAI_var_at_arcs_lower[arc], aux_vars_pdai_lower[arc]],
+                GRB.SOS_TYPE1, [self.dual_flow_var_at_arcs_upper[arc], self.aux_vars_upper[arc]]
             )
             self.m.addSOS(
                 GRB.SOS_TYPE1,
-                [self.dual_PDAI_var_at_arcs_upper[arc], aux_vars_pdai_upper[arc]],
+                [self.dual_PDAI_var_at_arcs_lower[arc], self.aux_vars_pdai_lower[arc]],
+            )
+            self.m.addSOS(
+                GRB.SOS_TYPE1,
+                [self.dual_PDAI_var_at_arcs_upper[arc], self.aux_vars_pdai_upper[arc]],
             )
 
         """for node in self.nodes_list:
@@ -509,29 +509,29 @@ class Single_Level_Formulation_Model:
     """
         ## Replaced by
         # Create auxiliary variables
-        aux_vars_pressure_lower = self.m.addVars(
+        self.aux_vars_pressure_lower = self.m.addVars(
             self.nodes_list,
             name=f"aux_var_pressure_lower",
         )
-        aux_vars_pressure_upper = self.m.addVars(
+        self.aux_vars_pressure_upper = self.m.addVars(
             self.nodes_list,
             name=f"aux_var_pressure_upper",
         )
         
-        aux_vars_loadshed_exit_lower = self.m.addVars(
+        self.aux_vars_loadshed_exit_lower = self.m.addVars(
             self.exit_nodes_list,
             name=f"aux_var_loadshed_exit_lower",
         )
-        aux_vars_loadshed_exit_upper = self.m.addVars(
+        self.aux_vars_loadshed_exit_upper = self.m.addVars(
             self.exit_nodes_list,
             name=f"aux_var_loadshed_exit_upper",
         )
 
-        aux_vars_loadshed_entry_lower = self.m.addVars(
+        self.aux_vars_loadshed_entry_lower = self.m.addVars(
             self.entry_nodes_list,
             name=f"aux_var_loadshed_entry_lower",
         )
-        aux_vars_loadshed_entry_upper = self.m.addVars(
+        self.aux_vars_loadshed_entry_upper = self.m.addVars(
             self.entry_nodes_list,
             name=f"aux_var_loadshed_entry_upper",
         )
@@ -539,13 +539,13 @@ class Single_Level_Formulation_Model:
         # Add constraints to define the auxiliary variables
         for node in self.nodes_list:
             self.m.addConstr(
-                aux_vars_pressure_lower[node]
+                self.aux_vars_pressure_lower[node]
                 == self.pressure_var_at_nodes[node]
                 - self.pressureBounds_at_nodes_dict_dict["LB"][node],
                 name=f"aux_constr_pressure_lower_{node}",
             )
             self.m.addConstr(
-                aux_vars_pressure_upper[node]
+                self.aux_vars_pressure_upper[node]
                 == self.pressureBounds_at_nodes_dict_dict["UB"][node]
                 - self.pressure_var_at_nodes[node],
                 name=f"aux_constr_pressure_upper_{node}",
@@ -553,13 +553,13 @@ class Single_Level_Formulation_Model:
 
         for node in self.exit_nodes_list:
             self.m.addConstr(
-                aux_vars_loadshed_exit_lower[node]
+                self.aux_vars_loadshed_exit_lower[node]
                 == self.loadshed_var_at_nodes[node]
                 - self.loadshedBounds_at_nodes_dict_dict["LB"][node],
                 name=f"aux_constr_loadshed_exit_lower_{node}",
             )
             self.m.addConstr(
-                aux_vars_loadshed_exit_upper[node]
+                self.aux_vars_loadshed_exit_upper[node]
                 == self.loadshedBounds_at_nodes_dict_dict["UB"][node]
                 - self.loadshed_var_at_nodes[node],
                 name=f"aux_constr_loadshed_exit_upper_{node}",
@@ -567,13 +567,13 @@ class Single_Level_Formulation_Model:
 
         for node in self.entry_nodes_list:
             self.m.addConstr(
-                aux_vars_loadshed_entry_lower[node]
+                self.aux_vars_loadshed_entry_lower[node]
                 == self.loadshed_var_at_nodes[node]
                 - self.loadshedBounds_at_nodes_dict_dict["LB"][node],
                 name=f"aux_constr_loadshed_entry_lower_{node}",
             )
             self.m.addConstr(
-                aux_vars_loadshed_entry_upper[node]
+                self.aux_vars_loadshed_entry_upper[node]
                 == self.loadshedBounds_at_nodes_dict_dict["UB"][node]
                 - self.loadshed_var_at_nodes[node],
                 name=f"aux_constr_loadshed_entry_upper_{node}",
@@ -585,14 +585,14 @@ class Single_Level_Formulation_Model:
                 GRB.SOS_TYPE1,
                 [
                     self.dual_pressure_var_at_nodes_lower[node],
-                    aux_vars_pressure_lower[node],
+                    self.aux_vars_pressure_lower[node],
                 ],
             )
             self.m.addSOS(
                 GRB.SOS_TYPE1,
                 [
                     self.dual_pressure_var_at_nodes_upper[node],
-                    aux_vars_pressure_upper[node],
+                    self.aux_vars_pressure_upper[node],
                 ],
             )
 
@@ -601,14 +601,14 @@ class Single_Level_Formulation_Model:
                 GRB.SOS_TYPE1,
                 [
                     self.dual_loadshed_var_at_exit_nodes_lower[node],
-                    aux_vars_loadshed_exit_lower[node],
+                    self.aux_vars_loadshed_exit_lower[node],
                 ],
             )
             self.m.addSOS(
                 GRB.SOS_TYPE1,
                 [
                     self.dual_loadshed_var_at_exit_nodes_upper[node],
-                    aux_vars_loadshed_exit_upper[node],
+                    self.aux_vars_loadshed_exit_upper[node],
                 ],
             )
 
@@ -617,18 +617,212 @@ class Single_Level_Formulation_Model:
                 GRB.SOS_TYPE1,
                 [
                     self.dual_loadshed_var_at_entry_nodes_lower[node],
-                    aux_vars_loadshed_entry_lower[node],
+                    self.aux_vars_loadshed_entry_lower[node],
                 ],
             )
             self.m.addSOS(
                 GRB.SOS_TYPE1,
                 [
                     self.dual_loadshed_var_at_entry_nodes_upper[node],
-                    aux_vars_loadshed_entry_upper[node],
+                    self.aux_vars_loadshed_entry_upper[node],
                 ],
             )
 
 
+    def add_valid_primal_inequalities(self):
+        
+        # upper bounds-Werte für primale Ungleichungsnebenbedingungen
+        self.ub_for__flow_var_at_arcs_lower = max(
+            [
+                self.massflowBounds_at_arcs_dict_dict["UB"][arc]
+                - self.massflowBounds_at_arcs_dict_dict["LB"][arc]
+                for arc in self.arcs_list
+            ]
+        )
+        self.ub_for__flow_var_at_arcs_upper = self.ub_for__flow_var_at_arcs_lower
+
+        self.ub_for__PDAI_var_at_arcs_lower = max(
+            [
+                self.pressureBounds_at_nodes_dict_dict["UB"][arc[0]]
+                - self.pressureBounds_at_nodes_dict_dict["LB"][arc[0]]
+                + self.pressureBounds_at_nodes_dict_dict["UB"][arc[1]]
+                - self.pressureBounds_at_nodes_dict_dict["LB"][arc[1]]
+                for arc in self.arcs_list
+                if arc[0] != arc[1]
+            ]
+        )
+        self.ub_for__PDAI_var_at_arcs_upper = self.ub_for__PDAI_var_at_arcs_lower
+
+        self.ub_for__pressure_var_at_nodes_lower = max(
+            [
+                self.pressureBounds_at_nodes_dict_dict["UB"][node]
+                - self.pressureBounds_at_nodes_dict_dict["LB"][node]
+                for node in self.nodes_list
+            ]
+        )
+        self.ub_for__pressure_var_at_nodes_upper = (
+            self.ub_for__pressure_var_at_nodes_lower
+        )
+
+        self.ub_for__loadshed_var_at_exit_nodes_lower = 1.0
+        self.ub_for__loadshed_var_at_exit_nodes_upper = (
+            self.ub_for__loadshed_var_at_exit_nodes_lower
+        )
+
+        self.ub_for__loadshed_var_at_entry_nodes_lower = max(
+            [
+                1.0 - self.loadshedBounds_at_nodes_dict_dict["LB"][node]
+                for node in self.entry_nodes_list
+            ]
+        )
+        self.ub_for__loadshed_var_at_entry_nodes_upper = (
+            self.ub_for__loadshed_var_at_entry_nodes_lower
+        )
+
+        
+        # obere Schranken für primale Ungleichungsnebenbedingungen zu den Dualvariablen
+        UB_for__flow_var_at_arcs_lower = self.m.addConstrs(
+            (
+                self.aux_vars_lower[arc]
+                <= self.ub_for__flow_var_at_arcs_lower
+                for arc in self.arcs_list
+            ),
+            name="UB_for__flow_var_at_arcs_lower",
+        )
+        UB_for__flow_var_at_arcs_upper = self.m.addConstrs(
+            (
+                self.aux_vars_upper[arc]
+                <= self.ub_for__flow_var_at_arcs_upper
+                for arc in self.arcs_list
+            ),
+            name="UB_for__flow_var_at_arcs_upper",
+        )
+
+        UB_for__PDAI_var_at_arcs_lower = self.m.addConstrs(
+            (
+                self.aux_vars_pdai_lower[arc]
+                <= self.ub_for__PDAI_var_at_arcs_lower
+                for arc in self.arcs_list
+            ),
+            name="UB_for__PDAI_var_at_arcs_lower",
+        )
+        UB_for__PDAI_var_at_arcs_upper = self.m.addConstrs(
+            (
+                self.aux_vars_pdai_upper[arc]
+                <= self.ub_for__PDAI_var_at_arcs_upper
+                for arc in self.arcs_list
+            ),
+            name="UB_for__PDAI_var_at_arcs_upper",
+        )
+
+        UB_for__pressure_var_at_nodes_lower = self.m.addConstrs(
+            (
+                self.aux_vars_pressure_lower[node]
+                <= self.ub_for__pressure_var_at_nodes_lower
+                for node in self.nodes_list
+            ),
+            name="UB_for__pressure_var_at_nodes_lower",
+        )
+        UB_for__pressure_var_at_nodes_upper = self.m.addConstrs(
+            (
+                self.aux_vars_pressure_upper[node]
+                <= self.ub_for__pressure_var_at_nodes_upper
+                for node in self.nodes_list
+            ),
+            name="UB_for__pressure_var_at_nodes_upper",
+        )
+
+        UB_for__loadshed_var_at_exit_nodes_lower = self.m.addConstrs(
+            (
+                self.aux_vars_loadshed_exit_lower[node]
+                <= self.ub_for__loadshed_var_at_exit_nodes_lower
+                for node in self.exit_nodes_list
+            ),
+            name="UB_for__loadshed_var_at_exit_nodes_lower",
+        )
+        UB_for__loadshed_var_at_exit_nodes_upper = self.m.addConstrs(
+            (
+                self.aux_vars_loadshed_exit_upper[node]
+                <= self.ub_for__loadshed_var_at_exit_nodes_upper
+                for node in self.exit_nodes_list
+            ),
+            name="UB_for__loadshed_var_at_exit_nodes_upper",
+        )
+
+        UB_for__loadshed_var_at_entry_nodes_lower = self.m.addConstrs(
+            (
+                self.aux_vars_loadshed_entry_lower[node]
+                <= self.ub_for__loadshed_var_at_entry_nodes_lower
+                for node in self.entry_nodes_list
+            ),
+            name="UB_for__loadshed_var_at_entry_nodes_lower",
+        )
+        UB_for__loadshed_var_at_entry_nodes_upper = self.m.addConstrs(
+            (
+                self.aux_vars_loadshed_entry_upper[node]
+                <= self.ub_for__loadshed_var_at_entry_nodes_upper
+                for node in self.entry_nodes_list
+            ),
+            name="UB_for__loadshed_var_at_entry_nodes_upper",
+        )
+    
+    
+    def add_valid_dual_inequalities(self):
+        
+        self.abs_dual_flowConservation_var_at_nodes = self.m.addVars(self.nodes_list,
+            lb=0.0, vtype=GRB.CONTINUOUS, name="abs_dual_flowConservation_var_at_nodes")
+
+        # Add constraints to define the absolute value
+        self.m.addConstrs((self.abs_dual_flowConservation_var_at_nodes[node] >= self.dual_flowConservation_var_at_nodes[node] for node in self.nodes_list), "abs_dual_flowConservation_var_at_nodes_lower")
+        self.m.addConstrs((self.abs_dual_flowConservation_var_at_nodes[node] >= -self.dual_flowConservation_var_at_nodes[node] for node in self.nodes_list), "abs_dual_flowConservation_var_at_nodes_upper")
+        
+        # Auxiliary variable to represent the max value
+        self.max_dual_flow_var = self.m.addVar(vtype=GRB.CONTINUOUS, name="max_dual_flow_var")
+        
+        # Add constraints to define the max value
+        for arc in self.arcs_list:
+            self.m.addConstr(self.max_dual_flow_var >= self.dual_flow_var_at_arcs_lower[arc])
+            self.m.addConstr(self.max_dual_flow_var >= self.dual_flow_var_at_arcs_upper[arc])
+        
+        
+        for node in self.entry_nodes_list:
+            self.m.addSOS(
+                GRB.SOS_TYPE1,
+                [
+                    self.dual_loadshed_var_at_entry_nodes_lower[node],
+                    self.dual_loadshed_var_at_entry_nodes_upper[node],
+                ],
+            )
+
+            self.m.addConstr(self.dual_loadshed_var_at_entry_nodes_lower[node] <= self.loadflow_at_nodes_dict[node] * self.abs_dual_flowConservation_var_at_nodes[node], f"dual_loadshed_var_at_entry_nodes_lower_ub{node}")
+            self.m.addConstr(self.dual_loadshed_var_at_entry_nodes_upper[node] <= self.loadflow_at_nodes_dict[node] * self.abs_dual_flowConservation_var_at_nodes[node], f"dual_loadshed_var_at_entry_nodes_upper_ub{node}")
+            
+        for node in self.exit_nodes_list:
+            self.m.addSOS(
+                GRB.SOS_TYPE1,
+                [
+                    self.dual_loadshed_var_at_exit_nodes_lower[node],
+                    self.dual_loadshed_var_at_exit_nodes_upper[node],
+                ],
+            )
+
+            self.m.addConstr(self.dual_loadshed_var_at_exit_nodes_lower[node] <= self.loadflow_at_nodes_dict[node] * (1.0 + self.abs_dual_flowConservation_var_at_nodes[node]), f"dual_loadshed_var_at_exit_nodes_lower_ub{node}")
+            self.m.addConstr(self.dual_loadshed_var_at_exit_nodes_upper[node] <= self.loadflow_at_nodes_dict[node] * (1.0 + self.abs_dual_flowConservation_var_at_nodes[node]), f"dual_loadshed_var_at_exit_nodes_upper_ub{node}")
+            
+        for node in self.nodes_list:
+            self.m.addSOS(
+                GRB.SOS_TYPE1,
+                [
+                    self.dual_pressure_var_at_nodes_lower[node],
+                    self.dual_pressure_var_at_nodes_upper[node],
+                ],
+            )
+            
+            self.m.addConstr(self.dual_pressure_var_at_nodes_lower[node] <= len(self.adjacent_arcs_as_list(node,"in") + self.adjacent_arcs_as_list(node,"out")) * self.max_dual_flow_var, f"dual_pressure_var_at_nodes_lower_ub{node}")
+            self.m.addConstr(self.dual_pressure_var_at_nodes_upper[node] <= len(self.adjacent_arcs_as_list(node,"in") + self.adjacent_arcs_as_list(node,"out")) * self.max_dual_flow_var, f"dual_pressure_var_at_nodes_upper_ub{node}")
+        
+    
+    
     def add__complementary_constraints(self):
         CC_dual_flow_var_at_arcs_lower = self.m.addConstrs(
             (
@@ -1316,16 +1510,18 @@ class Single_Level_Formulation_Model:
         return solution
    
         
-    def single_level_model_BigM(self):
+    def single_level_model_hybrid_approach(self):
         self.add_primal_feasibility_constraints()
         self.add_dual_feasibility_constraints()
-        self.add_CC_bigM_reformulation()
+        self.add_SOS1()
+        self.add_valid_primal_inequalities()
+        #self.add_valid_dual_inequalities()
         self.add_WCcheck_constraints()
         self.m.addConstr((quicksum(self.interdiction_var_at_arcs[arc] for arc in self.arcs_list) <= self.interdictionBudget_int),name="interdiction_budget")
         self.m.setObjective(quicksum(self.loadshed_var_at_nodes[node] * self.loadflow_at_nodes_dict[node] for node in self.exit_nodes_list),GRB.MAXIMIZE)
         
         # Define the path where the actual Gurobi-Log-Files are going 
-        path_to_LOG = f'./logs/SL_BigM/LOG/'
+        path_to_LOG = f'./logs/Hybrid_Approach/LOG/'
         os.makedirs(path_to_LOG, exist_ok=True)
         log_file_path = open(os.path.join(path_to_LOG, f'intBudget_{self.interdictionBudget_int}_instance_{self.m.ModelName}.log'),'w')
         sys.stdout = log_file_path
@@ -1333,8 +1529,8 @@ class Single_Level_Formulation_Model:
         self.m.optimize()
         
         # Define the path where you want to create the folders
-        path_to_SOL = f'./logs/SL_BigM/SOL/'
-        path_to_LP = f'./logs/SL_BigM/LP/'
+        path_to_SOL = f'./logs/Hybrid_Approach/SOL/'
+        path_to_LP = f'./logs/Hybrid_Approach/LP/'
         
         # Create the directories if they don't exist
         os.makedirs(path_to_SOL, exist_ok=True)

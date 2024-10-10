@@ -140,25 +140,11 @@ def run_method(mode, pyomoData, networkInstanceName, Budget):
         result= model.single_level_model_SOS1()
     elif mode == "SL_CC":
         result= model.single_level_model_CC()
-    elif mode == "SL_BigM":
-        result= model.single_level_model_BigM()
+    elif mode == "Hybrid_Approach":
+        result= model.single_level_model_hybrid_approach()
     elif mode == "Enum_Approach":
         result = model.enum_approach()
-        
-    # Old model (CURRENT_MODELS.py)
-    '''elif mode == "Enum_Primal":
-        model = LeaderModel(data, networkInstanceName, Budget, False, False)
-        result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
-    elif mode == "Enum_CC":
-        model = LeaderModel(data, networkInstanceName, Budget, True, True)
-        result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
-    elif mode == "Enum_SOS1":
-        model = LeaderModel(data, networkInstanceName, Budget, False, True)
-        result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
-    elif mode == "Enum_BigM":
-        model = LeaderModel(data, networkInstanceName, Budget, True, False)
-        result= {"interdiction": model.bruteForce()[0][0], "objVal": model.bruteForce()[0][1], "Runtime": model.bruteForce()[0][2]}
-    '''  
+     
     
     optimal_interdiction_decision = result["interdiction"]
     def read_solution_file(sol_path):
